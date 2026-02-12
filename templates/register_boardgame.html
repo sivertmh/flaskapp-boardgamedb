@@ -10,58 +10,50 @@
 
 <body>
     <nav>
-        <a href="{{ url_for('index') }}">
-            <h1>Internet Boardgame Database</h1>
+        <a href="index.html">
+            <h2>Internet Boardgame Database</h2>
         </a>
         <ul>
-            <li><a class="active" href="{{ url_for('index') }}">Homepage</a></li>
-            <li><a href="{{ url_for('login') }}">Log In</a></li>
-            <!-- Lenke vises bare ved riktig rolle (admin/editor) -->
-            {% if session.get("role_id") in (1, 2) %}
-            <li><a href="{{ url_for('register_boardgame') }}">Register Boardgame</a></li>
-            {% endif %}
-            {% if session.get("username") or session.get("role_id") %}
-            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-            {% endif %}
             <!-- Søkefelt -->
             <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
             <form action="/search" method="POST">
                 <button type="submit">&#128270;</button>
                 <input type="text" name="query" placeholder="Search">
             </form>
+            <li><a href="index.html">Homepage</a></li>
+            <li><a class="active" href="register_boardgame.html">Register Boardgame</a></li>
+            <li><a href="login.html">Log In</a></li>
+            <li><a href="#">Log Out</a></li>
         </ul>
     </nav>
     <main>
-        <h2>Register a Boardgame</h2>
-        <form method="POST">
-            <label for="name">Name of boardgame</label><br>
-            <input type="text" id="name" name="name" required><br><br>
+        <div class="user-forms-cont">
+            <div>
+                <h2>Register a Boardgame</h2>
+                <form method="POST">
+                    <label for="name">Name of boardgame</label><br>
+                    <input type="text" id="name" name="name" required><br><br>
 
-            <label for="year">Year</label><br>
-            <input type="text" id="year" name="year"><br><br>
+                    <label for="year">Year</label><br>
+                    <input type="text" id="year" name="year"><br><br>
 
-            <label for="creator">Creator</label><br>
-            <input type="text" id="creator" name="creator"><br><br>
+                    <label for="creator">Creator</label><br>
+                    <input type="text" id="creator" name="creator"><br><br>
 
-            <label for="publisher">Publisher</label><br>
-            <input type="text" id="publisher" name="publisher"><br><br>
+                    <label for="publisher">Publisher</label><br>
+                    <input type="text" id="publisher" name="publisher"><br><br>
 
-            <label for="description">Description</label><br>
-            <textarea id="description" name="description" placeholder="Description of the boardgame..."></textarea><br><br>
+                    <label for="description">Description</label><br>
+                    <textarea id="description" name="description"
+                        placeholder="Description of the boardgame..."></textarea><br><br>
 
-            <button type="submit">Register boardgame</button>
-        </form>
-
-        <!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+                    <button type="submit">Register boardgame</button>
+                </form>
+                <ul class=flashes>
+                    <li>Insert Flash</li>
+                </ul>
+            </div>
+        </div>
     </main>
 </body>
 

@@ -10,51 +10,33 @@
 
 <body>
     <nav>
-        <a href="{{ url_for('index') }}">
-            <h1>Internet Boardgame Database</h1>
+        <a href="index.html">
+            <h2>Internet Boardgame Database</h2>
         </a>
         <ul>
-            <li><a class="active" href="{{ url_for('index') }}">Homepage</a></li>
-            <li><a href="{{ url_for("login") }}">Log In</a></li>
-            <!-- Lenke vises bare ved riktig rolle (admin/editor) -->
-            {% if session.get("role_id") in (1, 2) %}
-            <li><a href="{{ url_for('register_boardgame') }}">Register Boardgame</a></li>
-            {% endif %}
-            {% if session.get("username") or session.get("role_id") %}
-            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-            {% endif %}
             <!-- Søkefelt -->
             <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
             <form action="/search" method="POST">
                 <button type="submit">&#128270;</button>
                 <input type="text" name="query" placeholder="Search">
             </form>
+            <li><a class="active" href="index.html">Homepage</a></li>
+            <li><a href="register_boardgame.html">Register Boardgame</a></li>
+            <li><a href="login.html">Log In</a></li>
+            <li><a href="#">Log Out</a></li>
         </ul>
     </nav>
     <main>
-        <!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
-        <!-- Henter (og viser) flashes om det er noen -->
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
         <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
+            <li>Insert Flash</li>
         </ul>
-        {% endif %}
-        {% endwith %}
-
-        <!-- Viser alle brettspill fra db her på forsiden -->
-        {% if bg_info %}
-        {% for i in bg_info %}
-        <div class="bg-info-cont">
-            <li class="bg-name-txt">{{ i[0] }} ({{ i[1] }})</li><br>
-            <p class="bg-publisher-txt">{{ i[2] }}</p>
+        <div class="boardgame-showcase-cont">
+            <h2>Browse Boardgames</h2>
+            <div class="boardgame-card-cont">
+                <img src="../static/media/azul_master_chocolatier.webp" alt="Box for Azul: Master Chocolatier">
+                <p>Azul: Master Chocolatier (2022)</p>
+            </div>
         </div>
-        {% endfor %}
-        {% else %}
-        <p>Looks empty here...</p>
-        {% endif %}
     </main>
 </body>
 
