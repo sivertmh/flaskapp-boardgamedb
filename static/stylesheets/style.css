@@ -1,12 +1,23 @@
 :root {
-    --bg-color: ;
+    --main-color1: #A22F2D;
     --fg-color: ;
-    --link-color: #010756;
+    --link-color: #FFFFFF;
+    --link-color2: #FFE08B;
+    --link-color3: #ce4c14;
 }
 
 body {
     margin: 0;
-    background-color: #ebebff;
+    background-color: #FFFFFF;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 nav {
@@ -14,7 +25,11 @@ nav {
     flex-direction: row;
     align-items: center;
     padding: 10px;
-    background-color: #C1BEF5;
+    background-color: var(--main-color1);
+}
+
+nav a {
+    color: var(--link-color2);
 }
 
 nav ul {
@@ -30,8 +45,19 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
     color: var(--link-color);
 }
+
+nav ul li a:hover {
+    color: var(--link-color2);
+}
+
+.active {
+    color: var(--link-color2);
+}
+
 
 nav ul form {
     display: flex;
@@ -41,7 +67,7 @@ nav ul form {
 
 a {
     text-decoration: underline;
-    color: var(--link-color);
+    color: var(--link-color3);
 }
 
 nav a {
@@ -53,4 +79,40 @@ nav a {
     flex-direction: column;
     align-items: center;
     margin-top: 80px;
+}
+
+.user-forms-cont div {
+    background-color: white;
+    border: #7b7b7b 2px solid;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.user-forms-cont textarea {
+    max-width: 159px;
+    min-width: 159px;
+    min-height: 100px;
+}
+
+.boardgame-showcase-cont {
+    padding: 50px;
+}
+
+.boardgame-card-cont {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border: 2px #dcdee1 solid;
+    border-radius: 10px;
+
+    width: 210px;
+    padding: 10px;
+}
+
+.boardgame-card-cont img {
+    max-width: 150px;
+    height: 100px;
+    border-radius: 5px;
 }
