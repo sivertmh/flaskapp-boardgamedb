@@ -4,7 +4,6 @@ import mysql.connector
 from dotenv import load_dotenv
 import bcrypt
 
-# Boilerplate-kode.
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
@@ -24,8 +23,8 @@ def create_tables():
     conn = db_connect()
     cursor = conn.cursor()
     
-# Lager user-tabell.
-# Bruker backticks på tabellnavnet "user". Dette er pga at det er en ting i Mysql fra før.
+# Brukertabell
+# Bruker backticks på tabellnavnet "user" p.g.a. eksisterende Mysql-fenomen.
     cursor.execute("""
 CREATE TABLE `user` (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -36,7 +35,7 @@ CREATE TABLE `user` (
 )
 """)
 
-# Lager boardgame-tabell.
+# Brettspilltabell
     cursor.execute("""
 CREATE TABLE boardgame (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,6 +48,7 @@ CREATE TABLE boardgame (
     )
 """)
 
+# Rolletabell
     cursor.execute("""
 CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -59,14 +59,14 @@ CREATE TABLE role (
     conn.commit()
     conn.close()
 
-# Prøver å kjøre funksjon "create_tables".
+# Prøver å lage tabeller
 try:
     create_tables()
     print("Tabeller ble laget!")
 except:
     print("Tabeller ble ikke laget. (ignorer om de finnes fra før)")
 
-# Route for hjemside.
+# Hjemside
 @app.route("/")
 def index():
     
@@ -79,7 +79,7 @@ def index():
     
     return render_template("index.html", bg_info=bg_info)
 
-# Route for registrering.
+# Registrering
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -105,8 +105,7 @@ def register():
         return redirect(url_for("login"))
     return render_template("register.html")
 
-# Route for innlogging.
-# Basert på kode fra tidligere oppgave.
+# Innlogging
 # Bcrypt istedenfor Werkzeug.
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -138,7 +137,7 @@ def login():
             return redirect(url_for("login"))
     return render_template("login.html")
 
-# Route for registrering av brettspill.
+# Registrering av brettspill
 @app.route("/register_boardgame", methods=["GET", "POST"])
 def register_boardgame():
     
@@ -191,7 +190,7 @@ def register_boardgame():
     
     return render_template("register_boardgame.html")
 
-# Route for å logge ut.
+# Utlogging
 @app.route("/logout")
 def logout():
     session.clear()
@@ -211,7 +210,7 @@ def perform_search(query):
 
     return results
 
-# Route for søk.
+# Route for søk
 # Creds til Ochoaprojects. Se kilder.
 @app.route('/search', methods=['POST'])
 def search():

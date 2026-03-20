@@ -8,7 +8,7 @@
 
 ## Deltakere
 
-Sivert M. H. (Individuelt prosjekt)
+Sivert M. Hansen (Individuelt prosjekt)
 
 ---
 
@@ -18,7 +18,7 @@ Sivert M. H. (Individuelt prosjekt)
 
 - Hva er prosjektet?
 
-Ideen er å lage en nettside for folk som er interreserte i brettspill. Brukeren skal kunne logge inn, registrere, søke og få info om brettspill, og om du er admin/editor, kunne legge til brettspill i databasen. Litt inspirasjon kommmer av nettsider som IMDb og Boardgamegeek.
+Prosjektet en Flask-applikasjon som jeg utvikler for å lære meg python-rammeverket, altså Flask. Det er en skoleoppgave og vi har krav om blant annet å et inloggings-system på plass. Ellers vil jeg utforske funksjoner som søking, visning av database-innhold og brukerdashbord. 
 
 - Hvilket problem løser det?
 
@@ -36,21 +36,9 @@ Løsningen er laget for de som spiller og liker brettspill, og de som vil finne 
 
 ### Refleksjon
 
-#### Resultat
-
-Dette er jo det andre ordentlige Flask-prosjektet vi har hatt med 2IMI, og denne gangen gikk det bedre. En god grunn til dette er at målet var mer realistisk å oppnå denne gangen. Det var mye mer produktivt å ha en gjennomførbar plan. Da går motivasjonen opp og man blir ikke sittende stille å tenke på hvor man skal begynne, isteden fører det til en effekt av en positiv "snowball"-effekt. 
-
-På den andre siden gikk noen ting kanskje ikke akkurat etter plan. For eksempel så fokuserte jeg lite på nettsidens stylesheet, litt som sist, selv om jeg ville bruke lenger tid på dette. En ting til var at jeg undergravde viktigheten av innhold i databasen. Mer tid burde blitt satt av bare til å legge til nye brettspill, slik at funksjonene blir ordentlig vist frem.
-
-Uansett vil jeg vi at dette prosjektet på mange måter var en forbedring fra forrige gang. Noen feil ble repetert, i tillegg til at nye oppsto. Totalt sett fra dette prosjektet har lært enormt mye nytt, fra å lage innloggings-side med Session, lagre passord trygt i en database med Bcrypt, og helt til å lage søke-funksjon i Python/Flask.
-
 #### Mulige Forbedringer
 
 Det er noen funksjoner og aspekter til prosjektet som kunne trengt forbedring. Enten om det er en revisjon av noe eller en helt ny funksjon. Her er noen konkrete ideer basert på min brukertesting:
-
-**Ville brukt litt mer tid på stil**
-
-Selv om dette ikke er hovedfokuset med et slikt prosjekt, blir det enklere å brukerteste med en nettside som ser ordentlig ut. Også, om man presenterer prosjektet til noen andre vil det være enklere å forstå hva nettsiden gjør om man har et bedre visuelt layout.
 
 **Egen side for hvert spill**
 
@@ -109,6 +97,24 @@ Systemet skal minst ha følgende funksjoner:
 
 ## 4. Datamodell
 
+### Programstruktur
+
+Under ser du en oversikt av de funksjonelle delene som trengs i programmet:
+
+boardgame-site/
+├── app.py
+├── templates/
+| ├── index.html
+| ├── register.html
+| ├── login.html
+| ├── register_boardgame.html
+| └── results.html
+├── static/
+| ├── media/
+| ├── stylesheets/
+| └── style.css
+└── .env
+
 ### Oversikt over tabeller
 
 **Tabell 1:**
@@ -119,7 +125,7 @@ Systemet skal minst ha følgende funksjoner:
 **Tabell 2:**
 
 - Navn: boardgame
-- Beskrivelse: Inneholder navnet (til brettspillet), hvilket år det kom ut, de som lagde det, de som publiserte det og en beskrivelse.
+- Beskrivelse: Inneholder brettspillets navn, hvilket år det kom ut, de som lagde det, de som publiserte det og en beskrivelse.
 
 **Tabell 3:**
 
@@ -176,38 +182,57 @@ INSERT INTO role (name) VALUES ("admin"), ("editor"), ("user");
 
 ### Hvordan sette opp dette systemet
 
-Klon prosjektet:
+Før du starter må du ha installert disse på systemet:
 
-```git
+- git
+- python
+
+Deretter kan du starte ved å klone prosjektet:
+
+```bash
 git clone https://github.com/sivertmh/boardgame-site.git
 ```
+
+Så installere nødvendige pakker for appen (Det er lurt å gjøre dette i et **venv** i python):
+
+```bash
+pip install -r requirements.txt
+```
+
+Nå kan du kjøre prosjektet lokalt:
+
+```bash
+python -m flask run
+```
+
+Utenom server/database, er dette alt du trenger for å bruke/teste Flask-appen.
 
 ---
 
 **Kilder:**
 
-dotenv: [https://www.geeksforgeeks.org/python/how-to-create-and-use-env-files-in-python/](https://www.geeksforgeeks.org/python/how-to-create-and-use-env-files-in-python/)
+- dotenv: [https://www.geeksforgeeks.org/python/how-to-create-and-use-env-files-in-python/](https://www.geeksforgeeks.org/python/how-to-create-and-use-env-files-in-python/)
 
-bcrypt hashing: [https://www.geeksforgeeks.org/python/hashing-passwords-in-python-with-bcrypt/](https://www.geeksforgeeks.org/python/hashing-passwords-in-python-with-bcrypt/)
+- bcrypt hashing: [https://www.geeksforgeeks.org/python/hashing-passwords-in-python-with-bcrypt/](https://www.geeksforgeeks.org/python/hashing-passwords-in-python-with-bcrypt/)
 
-bytte brukernavn Mysql: [https://dev.mysql.com/doc/refman/8.4/en/rename-user.html](https://dev.mysql.com/doc/refman/8.4/en/rename-user.html)
+- bytte brukernavn Mysql: [https://dev.mysql.com/doc/refman/8.4/en/rename-user.html](https://dev.mysql.com/doc/refman/8.4/en/rename-user.html)
 
-få liste av alle brukere i Mysql: [https://phoenixnap.com/kb/mysql-show-users](https://phoenixnap.com/kb/mysql-show-users)
+- få liste av alle brukere i Mysql: [https://phoenixnap.com/kb/mysql-show-users](https://phoenixnap.com/kb/mysql-show-users)
 
-Bytte passord i Mysql: [https://dev.mysql.com/doc/refman/8.4/en/alter-user.html](https://dev.mysql.com/doc/refman/8.4/en/alter-user.html)
+- Bytte passord i Mysql: [https://dev.mysql.com/doc/refman/8.4/en/alter-user.html](https://dev.mysql.com/doc/refman/8.4/en/alter-user.html)
 
-Bcrypt CHAR(60): [https://stackoverflow.com/questions/5881169/what-column-type-length-should-i-use-for-storing-a-bcrypt-hashed-password-in-a-d](https://stackoverflow.com/questions/5881169/what-column-type-length-should-i-use-for-storing-a-bcrypt-hashed-password-in-a-d)
+- Bcrypt CHAR(60): [https://stackoverflow.com/questions/5881169/what-column-type-length-should-i-use-for-storing-a-bcrypt-hashed-password-in-a-d](https://stackoverflow.com/questions/5881169/what-column-type-length-should-i-use-for-storing-a-bcrypt-hashed-password-in-a-d)
 
-_SQL Data Types_: [https://www.geeksforgeeks.org/sql/sql-data-types/](https://www.geeksforgeeks.org/sql/sql-data-types/)
+- _SQL Data Types_: [https://www.geeksforgeeks.org/sql/sql-data-types/](https://www.geeksforgeeks.org/sql/sql-data-types/)
 
-Innholdstekst tatt fra Boardgamegeeks nettsider: [https://boardgamegeek.com](https://boardgamegeek.com)
+- Innholdstekst tatt fra Boardgamegeeks nettsider: [https://boardgamegeek.com](https://boardgamegeek.com)
 
-Flash med flask: [https://flask.palletsprojects.com/en/stable/patterns/flashing/](https://flask.palletsprojects.com/en/stable/patterns/flashing/)
+- Flash med flask: [https://flask.palletsprojects.com/en/stable/patterns/flashing/](https://flask.palletsprojects.com/en/stable/patterns/flashing/)
 
-Lage roller i mysql (system, ikke i oppgave): [https://www.geeksforgeeks.org/sql/sql-creating-roles/](https://www.geeksforgeeks.org/sql/sql-creating-roles/)
+- Lage roller i mysql (system, ikke i oppgave): [https://www.geeksforgeeks.org/sql/sql-creating-roles/](https://www.geeksforgeeks.org/sql/sql-creating-roles/)
 
-_How to use Flask-Session in Python Flask_: [https://www.geeksforgeeks.org/python/how-to-use-flask-session-in-python-flask/](https://www.geeksforgeeks.org/python/how-to-use-flask-session-in-python-flask/)
+- _How to use Flask-Session in Python Flask_: [https://www.geeksforgeeks.org/python/how-to-use-flask-session-in-python-flask/](https://www.geeksforgeeks.org/python/how-to-use-flask-session-in-python-flask/)
 
-_Building a Search Feature in a Python Flask App_: [https://ochoaprojects.com/posts/FlaskAppWithSimpleSearch/](https://ochoaprojects.com/posts/FlaskAppWithSimpleSearch/)
+- _Building a Search Feature in a Python Flask App_: [https://ochoaprojects.com/posts/FlaskAppWithSimpleSearch/](https://ochoaprojects.com/posts/FlaskAppWithSimpleSearch/)
 
-_MySQL LIKE Operator_:[https://www.w3schools.com/mysql/mysql_like.asp](https://www.w3schools.com/mysql/mysql_like.asp)
+- _MySQL LIKE Operator_:[https://www.w3schools.com/mysql/mysql_like.asp](https://www.w3schools.com/mysql/mysql_like.asp)

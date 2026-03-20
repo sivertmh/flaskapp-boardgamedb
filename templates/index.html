@@ -50,16 +50,17 @@
         {% endwith %}
 
         <!-- Viser alle brettspill fra db -->
+        <!-- i[0] = navn, i[1] = år -->
         <div class="boardgame-showcase-cont">
             {% if bg_info %}
             {% for i in bg_info %}
             <div class="boardgame-card-cont">
                 <img src="../static/media/ticket_to_ride.webp" alt="Box cover image for {{ i[0] }}">
-                <p>{{ i[0] }} ({{ i[1] }})</p>
+                <p>{{ i[0] }}  ({{ i[1] }})</p>
             </div>
             {% endfor %}
             {% else %}
-            <p>Looks empty here...</p>
+            <p>No boardgames to show :/</p>
             {% endif %}
         </div>
 
