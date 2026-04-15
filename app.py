@@ -1,26 +1,29 @@
 from flask import Flask, redirect, render_template, request, url_for, flash, session
-import os
-import mysql.connector
 from dotenv import load_dotenv
+from waitress import serve
 import bcrypt
+import os
+
+# Kobling til db
+from python.conn import db_connect
+
+# Kobling til laptop-db (brukes når pi ikke er tilgjengelig)
+from python.laptop_conn import ltdb_connect
+
+# Bestemmer om rpi- eller laptop-db-kobling skal brukes
+rpi_db = False
 
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
 
-# Db-kobling.
-def db_connect():
-    # Kobler til db med info fra Environment-fil.
-    return mysql.connector.connect(
-        database=os.environ.get("DB_NAME"),
-        host=os.environ.get("DB_HOST", "localhost"),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD"),
-        port=os.environ.get("DB_PORT")
-    )
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
+    #serve(app, host="0.0.0.0", port=5000)
 
 def create_tables():
-    conn = db_connect()
+    # ltdb/db
+    conn = db_connect() if rpi_db else ltdb_connect()
     cursor = conn.cursor()
     
 # Brukertabell
@@ -70,10 +73,10 @@ except:
 @app.route("/")
 def index():
     
-    conn = db_connect()
+    conn = db_connect() if rpi_db else ltdb_connect()
     cursor = conn.cursor()
 
-    # Henter info som skal vises på forside i en tuple.
+    # Henter info som en liste/tuple.
     cursor.execute("SELECT name, year_published, publisher FROM boardgame")
     bg_info = cursor.fetchall()
     
@@ -84,16 +87,16 @@ def index():
 def register():
     if request.method == "POST":
         
-        conn = db_connect()
+        conn = db_connect() if rpi_db else ltdb_connect()
         cursor = conn.cursor()
         username = request.form['username']
         epost = request.form['email']
-        # kode fra geeksforgeeks.org for hashing med bcrypt
+        # Kode fra geeksforgeeks.org for hashing med bcrypt
         password = (request.form['password'])
         password_bytes = password.encode('utf-8')
         salt = bcrypt.gensalt()
         password_hash_bytes = bcrypt.hashpw(password_bytes, salt)
-        # siden jeg bruker CHAR(60) i DB må jeg omgjøre til tekststreng
+        # Siden jeg bruker CHAR(60) i DB må jeg omgjøre til tekststreng
         password_hash_str = password_hash_bytes.decode()
 
         cursor.execute("INSERT INTO user (username, email, password) VALUES (%s, %s, %s)", (username, epost, password_hash_str))
@@ -113,7 +116,7 @@ def login():
         username = request.form['username']
         password = request.form['password'].encode('utf-8')
         
-        conn = db_connect()
+        conn = db_connect() if rpi_db else ltdb_connect()
         cursor = conn.cursor(dictionary=True)
         
         # Henter brukernavn.
@@ -125,13 +128,19 @@ def login():
         # Henter passord og gjør om til bytes.
         if user:
             db_password = user['password'].encode('utf-8')
+        # Hvis den ikke finner bruker, gis den ikke verdi
+        else:
+            db_password = None
 
-        if bcrypt.checkpw(password, db_password):
-            session['username'] = user['username']
-            session['role_id'] = user['role_id']
-            
-            flash("You are now logged in!")
-            return redirect(url_for("index"))
+        if db_password:
+            # Sjekker passord mot hverandre
+            if bcrypt.checkpw(password, db_password):
+                session['username'] = user['username']
+                session['role_id'] = user['role_id']
+
+                flash("You are now logged in!")
+                return redirect(url_for("index"))
+        # Beskjed om feil til bruker
         else:
             flash("Invalid username or password")
             return redirect(url_for("login"))
@@ -141,20 +150,20 @@ def login():
 @app.route("/register_boardgame", methods=["GET", "POST"])
 def register_boardgame():
     
-    conn = db_connect()
+    conn = db_connect() if rpi_db else ltdb_connect()
     cursor = conn.cursor()
     
     # Fra "How to use Flask-Session in Python Flask". Se kilder.
     # Sjekker om bruker er logget inn og redirecter til index hvis ikke.
     if not session.get("username") or not session.get("role_id"):
-        flash("You must be logged in (as admin or editor) to access '/register_boardgame'.")
+        flash("You must be admin or editor to access '/register_boardgame'.")
         return redirect(url_for("index"))
     
     # Kodesnutt er fikset/minimalisert ved hjelp av KI.
     # Sjekker om bruker har riktig rolle, hvis ikke blir du redirected til index.
     # Roller: admin (1), editor (2), user (3).
     if session["role_id"] not in (1, 2):
-        flash("Only admins and editors can access '/register_boardgame'.")
+        flash("You must be admin or editor to access '/register_boardgame'.")
         return redirect(url_for("index"))
     
     # Kjøres ved POST-ing av login-form.
@@ -199,7 +208,7 @@ def logout():
 # Funksjon som brukes i search-route.
 # Creds til Ochoaprojects. Se kilder. Modifisert.
 def perform_search(query):
-    conn = db_connect()
+    conn = db_connect() if rpi_db else ltdb_connect()
     cursor = conn.cursor()
 
     # Kjører søk i database med query fra bruker.

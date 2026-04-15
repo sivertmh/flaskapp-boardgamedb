@@ -11,9 +11,15 @@
 <body>
     <nav>
         <a href="{{ url_for('index') }}">
-            <h1>Internet Boardgame Database</h1>
+            <h1>IBDb</h1>
         </a>
         <ul>
+            <!-- Søkefelt -->
+            <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
+            <form action="/search" method="POST">
+                <button type="submit">&#128270;</button>
+                <input type="text" name="query" placeholder="Search">
+            </form>
             <li><a href="{{ url_for('index') }}">Homepage</a></li>
             {% if not (session.get("username") and session.get("role_id")) %}
             <li><a href="{{ url_for('login') }}">Log In</a></li>
@@ -25,15 +31,9 @@
             {% if session.get("username") or session.get("role_id") %}
             <li><a href="{{ url_for('logout') }}">Log Out</a></li>
             {% endif %}
-            <!-- Søkefelt -->
-            <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
-            <form action="/search" method="POST">
-                <button type="submit">&#128270;</button>
-                <input type="text" name="query" placeholder="Search">
-            </form>
         </ul>
     </nav>
-    <div class="user-forms-cont">
+    <div class="user-form-cont">
         <div>
             <h2>Registrer a New User</h2>
             <form method="POST" action="{{ url_for('register') }}">

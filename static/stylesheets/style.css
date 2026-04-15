@@ -1,6 +1,5 @@
 :root {
     --main-color1: #A22F2D;
-    --fg-color: ;
     --link-color: #FFFFFF;
     --link-color2: #FFE08B;
     --link-color3: #ce4c14;
@@ -77,27 +76,31 @@ nav a {
     text-decoration: none;
 }
 
-.user-forms-cont {
+.user-form-cont {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 80px;
+    margin-bottom: 80px;
 }
 
-.user-forms-cont div {
+.user-form-cont div {
     background-color: white;
     border: #7b7b7b 2px solid;
     border-radius: 5px;
     padding: 20px;
 }
 
-.user-forms-cont textarea {
+.user-form-cont textarea {
     max-width: 159px;
     min-width: 159px;
     min-height: 100px;
 }
 
 .boardgame-showcase-cont {
+    display: flex;
+    flex-direction: row;
+    
     padding: 50px;
 }
 
@@ -112,6 +115,7 @@ nav a {
 
     width: 210px;
     padding: 10px;
+    margin: 10px;
 }
 
 .boardgame-card-cont img {

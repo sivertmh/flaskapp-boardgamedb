@@ -11,9 +11,15 @@
 <body>
     <nav>
         <a href="{{ url_for('index') }}">
-            <h1>Internet Boardgame Database</h1>
+            <h1>IBDb</h1>
         </a>
         <ul>
+            <!-- Søkefelt -->
+            <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
+            <form action="/search" method="POST">
+                <button type="submit">&#128270;</button>
+                <input type="text" name="query" placeholder="Search">
+            </form>
             <li><a href="{{ url_for('index') }}">Homepage</a></li>
             {% if not (session.get("username") and session.get("role_id")) %}
             <li><a href="{{ url_for('login') }}">Log In</a></li>
@@ -22,41 +28,41 @@
             {% if session.get("role_id") in (1, 2) %}
             <li><a class="active" href="{{ url_for('register_boardgame') }}">Register Boardgame</a></li>
             {% endif %}
+            <!-- Hvis logget inn -->
             {% if session.get("username") or session.get("role_id") %}
             <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            <li>User: {{ session['username'] }}</li>
             {% endif %}
-            <!-- Søkefelt -->
-            <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
-            <form action="/search" method="POST">
-                <button type="submit">&#128270;</button>
-                <input type="text" name="query" placeholder="Search">
-            </form>
         </ul>
     </nav>
     <main>
         <h2>Register a Boardgame</h2>
-        <form method="POST">
-            <label for="name">Name of boardgame</label><br>
-            <input type="text" name="name" required><br><br>
+        <div class="user-form-cont">
+            <div>
+                <form method="POST">
+                    <label for="name">Name of boardgame</label><br>
+                    <input type="text" name="name" required><br><br>
 
-            <label for="year">Year</label><br>
-            <input type="text" name="year"><br><br>
+                    <label for="year">Year</label><br>
+                    <input type="text" name="year"><br><br>
 
-            <label for="creator">Creators</label><br>
-            <input type="text" name="creator"><br><br>
+                    <label for="creator">Creators</label><br>
+                    <input type="text" name="creator"><br><br>
 
-            <label for="publisher">Publisher</label><br>
-            <input type="text" name="publisher"><br><br>
+                    <label for="publisher">Publisher</label><br>
+                    <input type="text" name="publisher"><br><br>
 
-            <label for="img-filename">Image Filename</label><br>
-            <input type="text" name="img-filename"><br><br>
+                    <label for="img-filename">Image Filename</label><br>
+                    <input type="text" name="img-filename"><br><br>
 
-            <label for="description">Description</label><br>
-            <textarea id="description" name="description"
-                placeholder="Description of the boardgame..."></textarea><br><br>
+                    <label for="description">Description</label><br>
+                    <textarea id="description" name="description"
+                        placeholder="Description of the boardgame..."></textarea><br><br>
 
-            <button type="submit">Register boardgame</button>
-        </form>
+                    <button type="submit">Register boardgame</button>
+                </form>
+            </div>
+        </div>
 
         <!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
         {% with messages = get_flashed_messages() %}

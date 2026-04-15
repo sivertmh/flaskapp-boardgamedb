@@ -11,9 +11,15 @@
 <body>
     <nav>
         <a href="{{ url_for('index') }}">
-            <h1>Internet Boardgame Database</h1>
+            <h1>IBDb</h1>
         </a>
         <ul>
+            <!-- Søkefelt -->
+            <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
+            <form action="/search" method="POST">
+                <button type="submit">&#128270;</button>
+                <input type="text" name="query" placeholder="Search">
+            </form>
             <li><a class="active" href="{{ url_for('index') }}">Homepage</a></li>
             <!-- Hvis ikke logget inn -->
             {% if not (session.get("username") and session.get("role_id")) %}
@@ -26,14 +32,8 @@
             <!-- Hvis logget inn -->
             {% if session.get("username") or session.get("role_id") %}
             <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-            <li>Logged in as: {{ session['username'] }}</li>
+            <li>User: {{ session['username'] }}</li>
             {% endif %}
-            <!-- Søkefelt -->
-            <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
-            <form action="/search" method="POST">
-                <button type="submit">&#128270;</button>
-                <input type="text" name="query" placeholder="Search">
-            </form>
         </ul>
     </nav>
     <main>
@@ -55,8 +55,8 @@
             {% if bg_info %}
             {% for i in bg_info %}
             <div class="boardgame-card-cont">
-                <img src="../static/media/ticket_to_ride.webp" alt="Box cover image for {{ i[0] }}">
-                <p>{{ i[0] }}  ({{ i[1] }})</p>
+                <img src="{{ i[5] }}" alt="Box cover image for {{ i[0] }}">
+                <p>{{ i[0] }} ({{ i[1] }})</p>
             </div>
             {% endfor %}
             {% else %}
