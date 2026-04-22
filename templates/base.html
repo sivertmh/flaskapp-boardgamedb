@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - IBDb</title>
+    <link rel="stylesheet" href="../static/stylesheets/style.css">
+</head>
+
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">
+            <h1>IBDb</h1>
+        </a>
+        <ul>
+            <!-- Creds til Ochoaprojects, se kilder. Modifisert. -->
+            <!-- Søkefelt -->
+            <form action="/search" method="POST">
+                <button type="submit">&#128270;</button>
+                <input type="text" name="query" placeholder="Search">
+            </form>
+
+            <li><a href="{{ url_for('index') }}"
+                    class="{{ 'active' if request.endpoint == 'index' else '' }}">Homepage</a></li>
+
+            <!-- Hvis ikke logget inn -->
+            {% if not (session.get("username") and session.get("role_id")) %}
+            <!-- Innlogging -->
+            <li><a href="{{ url_for('login') }}" class="{{ 'active' if request.endpoint == 'login' else '' }}">Log
+                    In</a></li>
+            {% endif %}
+
+            <!-- Hvis admin/editor -->
+            {% if session.get("role_id") in (1, 2) %}
+            <!-- Registrer brettspill -->
+            <li><a href="{{ url_for('register_boardgame') }}"
+                    class="{{ 'active' if request.endpoint == 'register_boardgame' else '' }}">Register Boardgame</a>
+            </li>
+            {% endif %}
+
+            <!-- Hvis logget inn -->
+            {% if session.get("username") or session.get("role_id") %}
+            <!-- Brukerside -->
+            <li><a href="{{ url_for('dashboard') }}"
+                    class="{{ 'active' if request.endpoint == 'dashboard' else '' }}">Account</a></li>
+            <!-- Utlogging -->
+            <li><a href="{{ url_for('logout') }}" class="{{ 'active' if request.endpoint == 'logout' else '' }}">Log
+                    Out</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+
+</html>

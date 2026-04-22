@@ -18,8 +18,8 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
-    #serve(app, host="0.0.0.0", port=5000)
+    #app.run(debug=True, host="0.0.0.0", port=5000)
+    serve(app, host="0.0.0.0", port=5000)
 
 def create_tables():
     # ltdb/db
@@ -77,7 +77,7 @@ def index():
     cursor = conn.cursor()
 
     # Henter info som en liste/tuple.
-    cursor.execute("SELECT name, year_published, publisher FROM boardgame")
+    cursor.execute("SELECT name, year_published, publisher, img_filename FROM boardgame")
     bg_info = cursor.fetchall()
     
     return render_template("index.html", bg_info=bg_info)
@@ -172,7 +172,7 @@ def register_boardgame():
         year = request.form['year']
         creator = request.form['creator']
         publisher = request.form['publisher']
-        img_filepath = "../static/media/" + request.form['img-filename']
+        img_filepath = "./static/media/" + request.form['img-filename']
         desc = request.form['description']
 
         if not bg_name:
@@ -227,3 +227,8 @@ def search():
     query = '%' + request.form['query'] + '%'
     results = perform_search(query)
     return render_template('results.html', user_query=user_query, results=results)
+
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')

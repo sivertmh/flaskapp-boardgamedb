@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+<!-- Tittel -->
+{% block title %}Dashboard{% endblock %}
+
+<!-- Innhold -->
+{% block content %}
+<!-- Koden under er tatt fra flasks dokumentasjonside -->
+<!-- Henter (og viser) flashes om det er noen -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% endblock %}

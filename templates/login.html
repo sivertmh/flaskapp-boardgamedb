@@ -1,67 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - IBDb</title>
-    <link rel="stylesheet" href="../static/stylesheets/style.css">
-</head>
+<!-- Tittel -->
+{% block title %}Login{% endblock %}
 
-<body>
-    <nav>
-        <a href="{{ url_for('index') }}">
-            <h1>IBDb</h1>
-        </a>
-        <ul>
-            <!-- Søkefelt -->
-            <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
-            <form action="/search" method="POST">
-                <button type="submit">&#128270;</button>
-                <input type="text" name="query" placeholder="Search">
-            </form>
-            <li><a href="{{ url_for('index') }}">Homepage</a></li>
-            {% if not (session.get("username") and not session.get("role_id")) %}
-            <li><a class="active" href="{{ url_for('login') }}">Log In</a></li>
-            {% endif %}
-            <!-- Lenke vises bare ved riktig rolle (admin/editor) -->
-            {% if session.get("role_id") in (1, 2) %}
-            <li><a href="{{ url_for('register_boardgame') }}">Register Boardgame</a></li>
-            {% endif %}
-            <!-- Hvis logget inn -->
-            {% if session.get("username") or session.get("role_id") %}
-            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-            <li>User: {{ session['username'] }}</li>
-            {% endif %}
-        </ul>
-    </nav>
-    <main>
-        <div class="user-form-cont">
-            <div>
-                <h2>Log In</h2>
-                <form method="POST" action="{{ url_for('login') }}">
-                    <label for="username">Username</label><br>
-                    <input type="text" id="username" name="username" required><br><br>
+<!-- Innhold -->
+{% block content %}
+<div class="user-form-cont">
+    <div>
+        <h2>Log In</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            <label for="username">Username</label><br>
+            <input type="text" id="username" name="username" required><br><br>
 
-                    <label for="password">Password</label><br>
-                    <input type="password" id="password" name="password" required><br><br>
+            <label for="password">Password</label><br>
+            <input type="password" id="password" name="password" required><br><br>
 
-                    <button type="submit">Log In</button>
-                </form>
-                <p>Don't have a user? You can sign up <a href="{{ url_for('register') }}">here.</a></p>
-            </div>
-            <!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <ul class=flashes>
-                {% for message in messages %}
-                <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% endwith %}
-        </div>
-    </main>
-</body>
-
-</html>
+            <button type="submit">Log In</button>
+        </form>
+        <p>Don't have a user? You can sign up <a href="{{ url_for('register') }}">here.</a></p>
+    </div>
+    <!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</div>
+{% endblock %}

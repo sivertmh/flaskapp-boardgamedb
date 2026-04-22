@@ -1,70 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage - IBDb</title>
-    <link rel="stylesheet" href="../static/stylesheets/style.css">
-</head>
+<!-- Tittel -->
+{% block title %}Home{% endblock %}
 
-<body>
-    <nav>
-        <a href="{{ url_for('index') }}">
-            <h1>IBDb</h1>
-        </a>
-        <ul>
-            <!-- Søkefelt -->
-            <!-- Creds til Ochoaprojects. Se kilder. Modifisert. -->
-            <form action="/search" method="POST">
-                <button type="submit">&#128270;</button>
-                <input type="text" name="query" placeholder="Search">
-            </form>
-            <li><a class="active" href="{{ url_for('index') }}">Homepage</a></li>
-            <!-- Hvis ikke logget inn -->
-            {% if not (session.get("username") and session.get("role_id")) %}
-            <li><a href="{{ url_for('login') }}">Log In</a></li>
-            {% endif %}
-            <!-- Hvis man er admin/editor -->
-            {% if session.get("role_id") in (1, 2) %}
-            <li><a href="{{ url_for('register_boardgame') }}">Register Boardgame</a></li>
-            {% endif %}
-            <!-- Hvis logget inn -->
-            {% if session.get("username") or session.get("role_id") %}
-            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-            <li>User: {{ session['username'] }}</li>
-            {% endif %}
-        </ul>
-    </nav>
-    <main>
-        <!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
-        <!-- Henter (og viser) flashes om det er noen -->
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+<!-- Innhold -->
+{% block content %}
+<!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
+<!-- Henter (og viser) flashes om det er noen -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
 
-        <!-- Viser alle brettspill fra db -->
-        <!-- i[0] = navn, i[1] = år -->
-        <div class="boardgame-showcase-cont">
-            {% if bg_info %}
-            {% for i in bg_info %}
-            <div class="boardgame-card-cont">
-                <img src="{{ i[5] }}" alt="Box cover image for {{ i[0] }}">
-                <p>{{ i[0] }} ({{ i[1] }})</p>
-            </div>
-            {% endfor %}
-            {% else %}
-            <p>No boardgames to show :/</p>
-            {% endif %}
-        </div>
-
-    </main>
-</body>
-
-</html>
+<!-- Viser alle brettspill fra db -->
+<!-- i[0] = navn, i[1] = år, i[3] = bilde -->
+<div class="boardgame-showcase-cont">
+    {% if bg_info %}
+    {% for i in bg_info %}
+    <div class="boardgame-card-cont">
+        <img src="{{ i[3] }}" alt="Box cover image for {{ i[0] }}">
+        <p>{{ i[0] }} ({{ i[1] }})</p>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No boardgames to show :/</p>
+    {% endif %}
+</div>
+{% endblock %}
