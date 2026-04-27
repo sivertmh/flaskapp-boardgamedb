@@ -5,17 +5,6 @@
 
 <!-- Innhold -->
 {% block content %}
-<!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
-<!-- Henter (og viser) flashes om det er noen -->
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul class=flashes>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
 
 <!-- Viser alle brettspill fra db -->
 <!-- i[0] = navn, i[1] = år, i[3] = bilde -->

@@ -19,15 +19,5 @@
         </form>
         <p>Don't have a user? You can sign up <a href="{{ url_for('register') }}">here.</a></p>
     </div>
-    <!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
 </div>
 {% endblock %}

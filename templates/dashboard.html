@@ -5,15 +5,8 @@
 
 <!-- Innhold -->
 {% block content %}
-<!-- Koden under er tatt fra flasks dokumentasjonside -->
-<!-- Henter (og viser) flashes om det er noen -->
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul class=flashes>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
+
+<p><b>Username:</b> {{ session['username'] }}</p>
+<p><b>Role:</b> {{ session['role_name'] }}</p>
+
 {% endblock %}

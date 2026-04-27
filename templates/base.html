@@ -50,7 +50,21 @@
             {% endif %}
         </ul>
     </nav>
+    <!-- Varierende innhold -->
     {% block content %}{% endblock %}
+
+    <!-- Flash-meldinger -->
+    <!-- Kilde: Flask sin Dokumentasjon -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
 </body>
 
 </html>

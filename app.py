@@ -86,7 +86,7 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        
+        # Enten kobling til db på laptop eller rpi
         conn = db_connect() if rpi_db else ltdb_connect()
         cursor = conn.cursor()
         username = request.form['username']
@@ -96,10 +96,10 @@ def register():
         password_bytes = password.encode('utf-8')
         salt = bcrypt.gensalt()
         password_hash_bytes = bcrypt.hashpw(password_bytes, salt)
-        # Siden jeg bruker CHAR(60) i DB må jeg omgjøre til tekststreng
+        # Siden jeg bruker CHAR(60) i DB må jeg gjøre om til tekststreng
         password_hash_str = password_hash_bytes.decode()
-
-        cursor.execute("INSERT INTO user (username, email, password) VALUES (%s, %s, %s)", (username, epost, password_hash_str))
+        # Setter info inn i databasen (3 er rolle-id for vanlig bruker)
+        cursor.execute("INSERT INTO user (username, email, password, role_id) VALUES (%s, %s, %s)", (username, epost, password_hash_str, 3))
         conn.commit()
         cursor.close()
         conn.close()
@@ -122,8 +122,6 @@ def login():
         # Henter brukernavn.
         cursor.execute("SELECT * FROM user WHERE username=%s", (username,))
         user = cursor.fetchone()
-        cursor.close()
-        conn.close()
         
         # Henter passord og gjør om til bytes.
         if user:
@@ -135,16 +133,35 @@ def login():
         if db_password:
             # Sjekker passord mot hverandre
             if bcrypt.checkpw(password, db_password):
+                conn = db_connect() if rpi_db else ltdb_connect()
+                cursor = conn.cursor(dictionary=True)
+                
+                # Henter rollenavn basert på rolle-id
+                cursor.execute("SELECT name FROM role WHERE id=%s", (user['role_id'],))
+                role = cursor.fetchone()
+                
+                # Session-cookies for brukerinfo settes
                 session['username'] = user['username']
                 session['role_id'] = user['role_id']
-
-                flash("You are now logged in!")
+                # Session-cookie for rollenavn
+                session['role_name'] = role['name'].capitalize()
+                
+                flash("You are now logged in!", "success")
                 return redirect(url_for("index"))
         # Beskjed om feil til bruker
         else:
-            flash("Invalid username or password")
+            flash("Invalid username or password", "error")
             return redirect(url_for("login"))
+        
+        cursor.close()
+        conn.close()
     return render_template("login.html")
+
+# Utlogging
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
 
 # Registrering av brettspill
 @app.route("/register_boardgame", methods=["GET", "POST"])
@@ -156,14 +173,14 @@ def register_boardgame():
     # Fra "How to use Flask-Session in Python Flask". Se kilder.
     # Sjekker om bruker er logget inn og redirecter til index hvis ikke.
     if not session.get("username") or not session.get("role_id"):
-        flash("You must be admin or editor to access '/register_boardgame'.")
+        flash("You are not authorized to view this page.", "error")
         return redirect(url_for("index"))
     
     # Kodesnutt er fikset/minimalisert ved hjelp av KI.
-    # Sjekker om bruker har riktig rolle, hvis ikke blir du redirected til index.
+    # Sjekker om bruker har riktig rolle, hvis ikke blir du omdirigert til hjemside.
     # Roller: admin (1), editor (2), user (3).
     if session["role_id"] not in (1, 2):
-        flash("You must be admin or editor to access '/register_boardgame'.")
+        flash("You are not authorized to view this page.", "error")
         return redirect(url_for("index"))
     
     # Kjøres ved POST-ing av login-form.
@@ -176,7 +193,7 @@ def register_boardgame():
         desc = request.form['description']
 
         if not bg_name:
-            flash("Name is required.")
+            flash("Name is required.", "error")
             return redirect(url_for("register_boardgame"))
         
         cursor.execute("""INSERT INTO boardgame ( 
@@ -199,12 +216,6 @@ def register_boardgame():
     
     return render_template("register_boardgame.html")
 
-# Utlogging
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("index"))
-
 # Funksjon som brukes i search-route.
 # Creds til Ochoaprojects. Se kilder. Modifisert.
 def perform_search(query):
@@ -220,7 +231,7 @@ def perform_search(query):
     return results
 
 # Route for søk
-# Creds til Ochoaprojects. Se kilder.
+# Creds til Ochoaprojects. Se kilder. Modifisert.
 @app.route('/search', methods=['POST'])
 def search():
     user_query = request.form['query']
@@ -228,7 +239,7 @@ def search():
     results = perform_search(query)
     return render_template('results.html', user_query=user_query, results=results)
 
-
+# Route for dashbord
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')

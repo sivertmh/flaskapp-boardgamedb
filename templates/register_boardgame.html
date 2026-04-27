@@ -33,14 +33,4 @@
     </div>
 </div>
 
-<!-- Koden under er tatt fra flask sin nettside med dokumentasjon -->
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul class=flashes>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
 {% endblock %}

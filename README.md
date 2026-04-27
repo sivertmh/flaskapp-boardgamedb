@@ -142,7 +142,7 @@ CREATE TABLE `user` (
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password CHAR(60) NOT NULL,
-    role_id INT, FOREIGN KEY (role_id) REFERENCES role(id)
+    role_id INT, FOREIGN KEY (role_id) REFERENCES role(id) DEFAULT 3
 );
 
 -- Tabell 2
