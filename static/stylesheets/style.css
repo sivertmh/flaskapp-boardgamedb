@@ -1,8 +1,8 @@
 :root {
-    --main-color1: #A22F2D;
+    --main-color1: #111649;
     --link-color: #FFFFFF;
-    --link-color2: #FFE08B;
-    --link-color3: #ce4c14;
+    --link-color2: #ffbbeb;
+    --link-color3: #d30595;
 }
 
 body {
@@ -100,7 +100,7 @@ nav a {
 .boardgame-showcase-cont {
     display: flex;
     flex-direction: row;
-    
+    flex-wrap: wrap;
     padding: 50px;
 }
 
@@ -122,4 +122,8 @@ nav a {
     max-width: 150px;
     height: 100px;
     border-radius: 5px;
+}
+
+.general-heading {
+    margin-left: 100px;
 }
