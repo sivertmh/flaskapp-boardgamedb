@@ -1,6 +1,5 @@
 from flask import Flask, redirect, render_template, request, url_for, flash, session
 from dotenv import load_dotenv
-from waitress import serve
 import bcrypt
 import os
 
@@ -17,14 +16,18 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
 
-if __name__ == "__main__":
-    #app.run(debug=True, host="0.0.0.0", port=5000)
-    serve(app, host="0.0.0.0", port=5000)
-
 def create_tables():
     # ltdb/db
     conn = db_connect() if rpi_db else ltdb_connect()
     cursor = conn.cursor()
+    
+# Rolletabell
+    cursor.execute("""
+CREATE TABLE role (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(20)
+)
+""")
     
 # Brukertabell
 # Bruker backticks på tabellnavnet "user" p.g.a. eksisterende Mysql-fenomen.
@@ -51,14 +54,6 @@ CREATE TABLE boardgame (
     )
 """)
 
-# Rolletabell
-    cursor.execute("""
-CREATE TABLE role (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(20)
-)
-""")
-
     conn.commit()
     conn.close()
 
@@ -76,7 +71,7 @@ def index():
     conn = db_connect() if rpi_db else ltdb_connect()
     cursor = conn.cursor()
 
-    # Henter info som en liste/tuple.
+    # Henter brettspillinfo som en liste/tuple.
     cursor.execute("SELECT name, year_published, publisher, img_filename FROM boardgame")
     bg_info = cursor.fetchall()
     
@@ -86,30 +81,31 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # Enten kobling til db på laptop eller rpi
-        conn = db_connect() if rpi_db else ltdb_connect()
-        cursor = conn.cursor()
-        username = request.form['username']
-        epost = request.form['email']
-        # Kode fra geeksforgeeks.org for hashing med bcrypt
-        password = (request.form['password'])
-        password_bytes = password.encode('utf-8')
-        salt = bcrypt.gensalt()
-        password_hash_bytes = bcrypt.hashpw(password_bytes, salt)
-        # Siden jeg bruker CHAR(60) i DB må jeg gjøre om til tekststreng
-        password_hash_str = password_hash_bytes.decode()
-        # Setter info inn i databasen (3 er rolle-id for vanlig bruker)
-        cursor.execute("INSERT INTO user (username, email, password, role_id) VALUES (%s, %s, %s)", (username, epost, password_hash_str, 3))
-        conn.commit()
-        cursor.close()
-        conn.close()
-        
-        flash("User registered!", "success")
-        return redirect(url_for("login"))
+            # Enten kobling til db på laptop eller rpi
+            conn = db_connect() if rpi_db else ltdb_connect()
+            cursor = conn.cursor()
+            username = request.form['username']
+            email = request.form['email']
+            # Kode fra geeksforgeeks.org for hashing med bcrypt
+            password = (request.form['password'])
+            password_bytes = password.encode('utf-8')
+            salt = bcrypt.gensalt()
+            password_hash_bytes = bcrypt.hashpw(password_bytes, salt)
+            # Siden jeg bruker CHAR(60) i DB må jeg gjøre om til tekststreng
+            password_hash_str = password_hash_bytes.decode()
+            # Setter info inn i databasen (3 er rolle-id for vanlig bruker)
+            cursor.execute("INSERT INTO user (username, email, password, role_id) VALUES (%s, %s, %s, %s)", (username, email, password_hash_str, 3))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            flash("User registered!", "success")
+            return redirect(url_for("login"))
     return render_template("register.html")
 
 # Innlogging
 # Bcrypt istedenfor Werkzeug.
+# Bcrypt er teoretisk sett litt sterkere, men i praksis gjorde jeg det for å prøve ut en annen løsning.
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -126,7 +122,7 @@ def login():
         # Henter passord og gjør om til bytes.
         if user:
             db_password = user['password'].encode('utf-8')
-        # Hvis den ikke finner bruker, gis den ikke verdi
+        # Hvis den ikke finner bruker, gis den tom verdi
         else:
             db_password = None
 
@@ -146,9 +142,9 @@ def login():
                 # Session-cookie for rollenavn
                 session['role_name'] = role['name'].capitalize()
                 
-                flash("You are now logged in!", "success")
+                flash("Successfully logged in!", "success")
                 return redirect(url_for("index"))
-        # Beskjed om feil til bruker
+        # Feilmelding til bruker
         else:
             flash("Invalid username or password", "error")
             return redirect(url_for("login"))
@@ -176,7 +172,7 @@ def register_boardgame():
         flash("You are not authorized to view this page.", "error")
         return redirect(url_for("index"))
     
-    # Kodesnutt er fikset/minimalisert ved hjelp av KI.
+    # Kodesnutt er fikset/minimalisert ved hjelp av KI (Microsoft Copilot).
     # Sjekker om bruker har riktig rolle, hvis ikke blir du omdirigert til hjemside.
     # Roller: admin (1), editor (2), user (3).
     if session["role_id"] not in (1, 2):
@@ -216,7 +212,7 @@ def register_boardgame():
     
     return render_template("register_boardgame.html")
 
-# Funksjon som brukes i search-route.
+# Funksjon som brukes i search-routen.
 # Creds til Ochoaprojects. Se kilder. Modifisert.
 def perform_search(query):
     conn = db_connect() if rpi_db else ltdb_connect()
@@ -243,3 +239,7 @@ def search():
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

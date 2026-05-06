@@ -8,10 +8,10 @@
 <h2 class="general-heading">Browse</h2>
 
 <!-- Viser alle brettspill fra db -->
-<!-- i[0] = navn, i[1] = år, i[3] = bilde -->
 <div class="boardgame-showcase-cont">
     {% if bg_info %}
     {% for i in bg_info %}
+    <!-- i[0] = navn, i[1] = år, i[3] = bilde -->
     <div class="boardgame-card-cont">
         <img src="{{ i[3] }}" alt="Box cover image for {{ i[0] }}">
         <p>{{ i[0] }} ({{ i[1] }})</p>

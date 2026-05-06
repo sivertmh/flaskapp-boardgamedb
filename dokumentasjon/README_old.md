@@ -34,31 +34,43 @@ Hvem er løsningen laget for?
 
 Løsningen er laget for de som spiller og liker brettspill, og de som vil finne ut mer om de. Det kan f.eks. være før de velger å kjøpe det, eller ikke, p.g.a. det de leste om det. Det kan også f.eks. være de som har mistet regler og glemte hva målet i spillet var som bruker siden for å minne seg selv på dette.
 
-### Plan for Prøveeksamensdagen
+### Refleksjon
 
-Videre kan du lese om det jeg har planlagt å utføre på selve prøveeksamen.
+#### Mulige Forbedringer
 
-#### Lage et ordentlig brukerdashbord
+Det er noen funksjoner og aspekter til prosjektet som kunne trengt forbedring. Enten om det er en revisjon av noe eller en helt ny funksjon. Her er noen konkrete ideer basert på min brukertesting:
 
-Denne er veldig omfattende så jeg deler den opp i mindre deler:
+**Egen side for hvert spill**
 
-**Endre egen brukerinfo:**
+Dette kan nesten klassifiseres som en manglende funksjon. Hver av spillene på forsiden, eller hvis du søker de opp, burde ha sin egen side hvor du får flere detaljer og beskrivelse av spillet. Selv om dette ikke sto i målene jeg satt, er ikke nettsiden helt komplett uten. Hvis jeg velger å fortsette på prosjektet, er dette en viktig del.
 
-Hvis brukeren finner ut at de plutselig vil bruke en annen email, et annet brukernavn eller bytte passord, burde de kunne det. I brukerdashbordet vil jeg derfor legge til denne funksjonaliteten.
+**Brukeradministrering**
 
-**Gi admin og editor mer kraft:**
+Admin har oversikt over brukere og kan angi roller. Man slipper da å manuelt gå inn i database med SSH. Dette gir også en reell grunn til å ha en editor-rolle, da admin har samme tillatelser som editor, og nå faktisk fler.
 
-Til nå er den eneste forskjellen på en vanlig bruker og admin/editor muligheten til å registrere nye brettspill. I tillegg er det ingen praktiske forskjeller mellom admin og editor så langt.
+**Rolleindikator**
 
-Jeg vil at admin skal kunne slette brukere og kunne endre informasjon som tilhører brettspillene. Da slipper jeg å gå inn i databasen for å gjøre dette manuelt.
+Muligheten til å se hva slags rolle din bruker har. Det kan gjøres ved å ha tekst i navbar eller i navbar men i dropdown når man er logget inn.
 
-#### Annet
+**Innloggingsstatus**
 
-Egen side til hvert av brettspillene. Her skal blant annet beskrivelsen komme til bruk, noe den ikke egentlig har vært fra før.
+Dette ligner en del på rolleindikator-ideen, men enklere. Brukeren kan se at de er logget inn. Kan gjøres ved å vise brukernavn i navbar.
 
-**Oversiktlige søkeresultater:**
+---
 
-Nå hentes bare alt ut av databasen og vises i en parantes, en rå python-liste. Dette er ikke optimalt. For å gjøre det enklest mulig kan jeg ta utgangspunkt i "brettspillkortene" jeg har fra før av.
+## 2. Funksjonelle krav
+
+Systemet skal minst ha følgende funksjoner:
+
+1. Registrering
+
+2. Innlogging
+
+3. Søke etter brettspill
+
+4. Registrere brettspill (om admin/editor)
+
+5. Ulikt innhold/tillatelser basert på rolle (registrering av brettspill)
 
 ---
 
@@ -101,7 +113,8 @@ boardgame-site/
 │ └── results.html
 ├── static/
 │ ├── media/
-│ └── stylesheets/style.css
+│ └── stylesheets/
+│ └── style.css
 └── .env
 
 ### Oversikt over tabeller
@@ -109,7 +122,7 @@ boardgame-site/
 **Tabell 1:**
 
 - Navn: user
-- Beskrivelse: Innholder en brukers info om email, brukernavn og et hashet og saltet passord.
+- Beskrivelse: Innholder brukerinfo om email, brukernavn og et hashet og saltet passord.
 
 **Tabell 2:**
 

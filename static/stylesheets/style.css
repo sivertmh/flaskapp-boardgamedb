@@ -19,6 +19,8 @@ h6 {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Navbar */
+
 nav {
     display: flex;
     flex-direction: row;
@@ -67,14 +69,16 @@ nav ul form {
     height: 30px;
 }
 
+nav a {
+    text-decoration: none;
+}
+
 a {
     text-decoration: underline;
     color: var(--link-color3);
 }
 
-nav a {
-    text-decoration: none;
-}
+/* Annet */
 
 .user-form-cont {
     display: flex;

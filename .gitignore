@@ -1,10 +1,10 @@
-# Hemmelig informasjon. Viktig.
+# Environment-fil med hemmelig informasjon
 .env
 
 # Python-relatert
 __pycache__/
 
-# Ulike Environmenter
+# Ulike environment-er
 .env
 .envrc
 .venv
@@ -14,10 +14,9 @@ ENV/
 env.bak/
 venv.bak/
 
-# IDE og kode-editor filer.
+# IDE og kode-editor filer
 .vscode/
 .idea/
 
 # Annet
 oppgavetekst/
-Mal_for_dokumentasjon_av_prosjekt.md
