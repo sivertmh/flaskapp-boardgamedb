@@ -2,10 +2,10 @@ from flask import Flask, redirect, render_template, request, url_for, flash, ses
 from dotenv import load_dotenv
 import bcrypt
 import os
+from waitress import serve
 
 # Kobling til db
 from python.conn import db_connect
-
 # Kobling til laptop-db (brukes når pi ikke er tilgjengelig)
 from python.laptop_conn import ltdb_connect
 
@@ -242,4 +242,5 @@ def dashboard():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    #app.run(debug=True)
+    serve(app, host="0.0.0.0", port=8080)

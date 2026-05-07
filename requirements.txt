@@ -14,5 +14,6 @@ ordered-set==4.1.0
 packaging==26.0
 python-dotenv==1.2.1
 typing_extensions==4.15.0
+waitress==3.0.2
 Werkzeug==3.1.5
 wrapt==2.0.1

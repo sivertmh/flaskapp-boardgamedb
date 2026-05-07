@@ -6,7 +6,7 @@
 
 ---
 
-## Deltakere
+## Bidragsytere
 
 Sivert M. Hansen (Individuelt prosjekt)
 
@@ -42,11 +42,11 @@ Videre kan du lese om det jeg har planlagt å utføre på selve prøveeksamen.
 
 Denne er veldig omfattende så jeg deler den opp i mindre deler:
 
-**Endre egen brukerinfo:**
+**Endre egen brukerinfo**
 
 Hvis brukeren finner ut at de plutselig vil bruke en annen email, et annet brukernavn eller bytte passord, burde de kunne det. I brukerdashbordet vil jeg derfor legge til denne funksjonaliteten.
 
-**Gi admin og editor mer kraft:**
+**Gi admin og editor mer kraft**
 
 Til nå er den eneste forskjellen på en vanlig bruker og admin/editor muligheten til å registrere nye brettspill. I tillegg er det ingen praktiske forskjeller mellom admin og editor så langt.
 
@@ -56,9 +56,17 @@ Jeg vil at admin skal kunne slette brukere og kunne endre informasjon som tilhø
 
 Egen side til hvert av brettspillene. Her skal blant annet beskrivelsen komme til bruk, noe den ikke egentlig har vært fra før.
 
-**Oversiktlige søkeresultater:**
+**Oversiktlige søkeresultater**
 
 Nå hentes bare alt ut av databasen og vises i en parantes, en rå python-liste. Dette er ikke optimalt. For å gjøre det enklest mulig kan jeg ta utgangspunkt i "brettspillkortene" jeg har fra før av.
+
+**Lage en side for personvernserklæring/TOS**
+
+Sier seg litt selv, bare en som forteller deg hvordan jeg bruker dataen din på nettsiden. Jeg kan da lage en footer med lenke til TOS-en.
+
+**At bilder er blobs istedenfor relative paths**
+
+Dette gir meg muligheten til at andre enn meg laster opp bilder til databasen. Nå må jeg manuelt legge bilde inn i media-mappen, for å så referere bare til filnavnet når jeg registrerer. Måten jeg har det på nå gjør det umulig for brukere (editor/admin) på nettsiden å legge til bilder ved registrering av brettspill.
 
 ---
 
@@ -68,7 +76,7 @@ Nå hentes bare alt ut av databasen og vises i en parantes, en rå python-liste.
 
 - Python
 
-### Rammeverk / Plattform / Spillmotor
+### Rammeverk
 
 - Flask
 
@@ -76,8 +84,9 @@ Nå hentes bare alt ut av databasen og vises i en parantes, en rå python-liste.
 
 - MariaDB
 
-### Verktøy
+### Andre Verktøy
 
+- Waitress (WSGI Server)
 - GitHub
 - GitHub Projects (Kanban)
 
@@ -122,6 +131,8 @@ boardgame-site/
 - Beskrivelse: Inneholder forskjellige roller som brukere kan ha. Her må jeg kjøre en manuell Insert, eller lage en funksjon i Python-filen.
 
 ### Tabellstruktur i Databasen
+
+Videre ser du strukturen på kommandoene brukt til å skape tabellene. Hvis du vil ha en mer grafisk fremstilling av tabellene, kan du sjekke ut [_tabellstruktur.md_](./dokumentasjon/tabellstruktur.md) som du finner i dokumentasjonsmappen.
 
 ```sql
 -- Tabell 1
@@ -194,10 +205,20 @@ Nå kan du kjøre prosjektet lokalt fra terminalen:
 python -m flask run
 ```
 
+Du kan også kjøre med Waitress (kan da nås av andre på LAN):
+
+```bash
+# 0.0.0.0 gjør den tilgjengelig utover LAN-et med ip-adressen til systemet den kjøres på
+waitress-serve --host 0.0.0.0 app:app
+
+# Eller, mer eksplisitt:
+waitress-serve --listen 0.0.0.0:8080 app:app
+```
+
 Utenom server/database, er dette alt du trenger for grunnleggende bruk/test av Flask-appen. Uten kobling til database vises ikke brettspill og login vil ikke fungere. Hvis du endrer databasekoblingen til en db du har tilgang til, vil du kunne kjøre _app.py_ og tabeller vil opprettes.
 
 ---
 
 **Kilder:**
 
-Du finner kilder i dokumentet [_klideliste.md_](./dokumentasjon/kildeliste.md) som er under mappen _dokumentasjon_.
+Du finner kilder i dokumentet [_klideliste.md_](./dokumentasjon/kildeliste.md) som er i mappen _dokumentasjon_.

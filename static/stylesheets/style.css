@@ -80,6 +80,22 @@ a {
 
 /* Annet */
 
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 20vh;
+    background-color: #ffbbeb;
+    border-bottom: 5px solid #ffbbeb;
+    background-image: linear-gradient(to bottom, #ffbbeb, #ffffff);
+}
+
+.hero h1 {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 300;
+}
+
 .user-form-cont {
     display: flex;
     flex-direction: column;
