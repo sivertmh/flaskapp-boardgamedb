@@ -9,4 +9,6 @@
 <p><b>Username:</b> {{ session['username'] }}</p>
 <p><b>Role:</b> {{ session['role_name'] }}</p>
 
+<button><a href="{{ url_for('logout') }}">Log Out</a></button>
+
 {% endblock %}

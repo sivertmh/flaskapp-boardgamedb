@@ -86,7 +86,7 @@ Dette gir meg muligheten til at andre enn meg laster opp bilder til databasen. N
 
 ### Andre Verktøy
 
-- Waitress (WSGI Server)
+- Waitress (WSGI)
 - GitHub
 - GitHub Projects (Kanban)
 
