@@ -9,6 +9,16 @@
 <p><b>Username:</b> {{ session['username'] }}</p>
 <p><b>Role:</b> {{ session['role_name'] }}</p>
 
-<button><a href="{{ url_for('logout') }}">Log Out</a></button>
+<!-- Sletting av bruker -->
+<form action="{{ url_for('dashboard') }}" method="POST">
+    <legend >Danger Zone! Deletion of account</legend>
+    <input type="text" name="username" placeholder="Username..." />
+    <input type="password" name="password" placeholder="Password..." />
+    <input type="submit" value="Delete account"
+        onclick="return confirm('Are you sure you want to delete your account? These changes are permanent.')"></input>
+</form>
+
+<!-- Utlogging -->
+<button><a href="{{ url_for('logout') }}">Log out</a></button>
 
 {% endblock %}

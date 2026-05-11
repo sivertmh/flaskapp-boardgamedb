@@ -94,7 +94,7 @@ def register():
             # Siden jeg bruker CHAR(60) i DB må jeg gjøre om til tekststreng
             password_hash_str = password_hash_bytes.decode()
             # Setter info inn i databasen (3 er rolle-id for vanlig bruker)
-            cursor.execute("INSERT INTO user (username, email, password, role_id) VALUES (%s, %s, %s, %s)", (username, email, password_hash_str, 3))
+            cursor.execute("INSERT INTO user (username, email, password, role_id) VALUES (%s, %s, %s, %s, %s)", (username, email, password_hash_str, 3))
             conn.commit()
             cursor.close()
             conn.close()
@@ -119,6 +119,7 @@ def login():
         cursor.execute("SELECT * FROM user WHERE username=%s", (username,))
         user = cursor.fetchone()
         
+        
         # Henter passord og gjør om til bytes.
         if user:
             db_password = user['password'].encode('utf-8')
@@ -127,8 +128,8 @@ def login():
             db_password = None
 
         if db_password:
-            # Sjekker passord mot hverandre
-            if bcrypt.checkpw(password, db_password):
+            # Sjekker passordene mot hverandre
+            if bcrypt.checkpw(password, db_password) and user['active'] == 1:
                 conn = db_connect() if rpi_db else ltdb_connect()
                 cursor = conn.cursor(dictionary=True)
                 
@@ -144,14 +145,14 @@ def login():
                 
                 flash("Successfully logged in!", "success")
                 return redirect(url_for("index"))
-        # Feilmelding til bruker
+        # Feilmelding til bruker            
         else:
             flash("Invalid username or password", "error")
             return redirect(url_for("login"))
         
         cursor.close()
         conn.close()
-    return render_template("login.html")
+    return render_template("login.html" )
 
 # Utlogging
 @app.route("/logout")
@@ -236,10 +237,41 @@ def search():
     return render_template('results.html', user_query=user_query, results=results)
 
 # Route for dashbord
-@app.route('/dashboard')
+@app.route('/dashboard', methods=["GET", "POST"])
 def dashboard():
+    if request.method == "POST":
+        conn = db_connect() if rpi_db else ltdb_connect()
+        cursor = conn.cursor()
+        
+        username = session["username"]
+        
+        # Brukernavn fra form
+        form_username = request.form["username"]
+        # Passord fra form gjøres om til bytes
+        form_password = request.form["password"].encode('utf-8')
+        
+        # Henter passord fra db basert på brukernavn i session
+        cursor.execute("SELECT password FROM user WHERE username=%s", (username,))
+        # Gjør om hentet passord til bytes
+        password_from_db = cursor.fetchone()[0].encode('utf-8')
+        
+        cursor.close()
+        conn.close()
+        
+        # Sletting av bruker
+        # Betingelsen sjekker brukernavnene mot hverandre og passordene mot hverandre 
+        if session['username'] == form_username and bcrypt.checkpw(form_password, password_from_db):
+            conn = db_connect() if rpi_db else ltdb_connect()
+            cursor = conn.cursor()
+            
+            cursor.execute("UPDATE user SET active=0 WHERE username=%s", (username,))
+            conn.commit()
+            session.clear()
+            flash("Successfully deleted account.", "success")
+            return redirect(url_for('index'))
+        else:
+            flash("Wrong username or password.", "error")
     return render_template('dashboard.html')
-
 
 if __name__ == "__main__":
     #app.run(debug=True)

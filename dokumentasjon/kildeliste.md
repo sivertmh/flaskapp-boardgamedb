@@ -34,5 +34,8 @@ Her finner du ulike kilder jeg har brukt til å løse diverse problemer.
 
 Her oppgir jeg kilder brukt under prøveeksamen, på en måte slik at andre kan finne fram til dem.
 
-- Kildenavn: [lenke](nettsidenavn)
+- _SQL Tutorial_ (ble brukt som oppslagsverk til ulike SQL-problemer): [https://www.w3schools.com/SQL/default.asp](https://www.w3schools.com/SQL/default.asp)
 
+- _SQL UPDATE Statement_: [https://www.w3schools.com/SQL/sql_update.asp](https://www.w3schools.com/SQL/sql_update.asp)
+
+- _SQL Data Types_ : [https://www.geeksforgeeks.org/sql/sql-data-types/](https://www.geeksforgeeks.org/sql/sql-data-types/)
