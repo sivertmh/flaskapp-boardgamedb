@@ -180,14 +180,14 @@ def register_boardgame():
         flash("You are not authorized to view this page.", "error")
         return redirect(url_for("index"))
     
-    # Kjøres ved POST-ing av login-form.
+    # Kjøres ved POST-ing av brettspill-form.
     if request.method == "POST":
-        bg_name = request.form['name']
-        year = request.form['year']
-        creator = request.form['creator']
-        publisher = request.form['publisher']
-        img_filepath = "./static/media/" + request.form['img-filename']
-        desc = request.form['description']
+        bg_name = request.form['name'].strip()
+        year = request.form['year'].strip()
+        creator = request.form['creator'].strip()
+        publisher = request.form['publisher'].strip()
+        img_filepath = "./static/media/" + request.form['img-filename'].strip()
+        desc = request.form['description'].strip()
 
         if not bg_name:
             flash("Name is required.", "error")
@@ -272,6 +272,10 @@ def dashboard():
         else:
             flash("Wrong username or password.", "error")
     return render_template('dashboard.html')
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
 
 if __name__ == "__main__":
     #app.run(debug=True)
