@@ -10,6 +10,10 @@ body {
     background-color: #FFFFFF;
 }
 
+main {
+    min-height: 75vh;
+}
+
 h1,
 h2,
 h3,
@@ -86,7 +90,6 @@ a {
     align-items: center;
     width: 100vw;
     height: 20vh;
-    background-color: #ffbbeb;
     border-bottom: 5px solid #ffbbeb;
     background-image: linear-gradient(to bottom, #ffbbeb, #ffffff);
 }
@@ -147,4 +150,28 @@ a {
 
 .general-heading {
     margin-left: 100px;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-top: var(--main-color1) solid 2px;
+    width: 70vw;
+}
+
+.text-logo {
+    background-color: #111649;
+    color: #ffbbeb;
+    padding: 10px;
+    border-radius: 3px;
+    width: fit-content;
 }

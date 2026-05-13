@@ -94,7 +94,7 @@ def register():
             # Siden jeg bruker CHAR(60) i DB må jeg gjøre om til tekststreng
             password_hash_str = password_hash_bytes.decode()
             # Setter info inn i databasen (3 er rolle-id for vanlig bruker)
-            cursor.execute("INSERT INTO user (username, email, password, role_id) VALUES (%s, %s, %s, %s, %s)", (username, email, password_hash_str, 3))
+            cursor.execute("INSERT INTO user (username, email, password, role_id) VALUES (%s, %s, %s, %s)", (username, email, password_hash_str, 3))
             conn.commit()
             cursor.close()
             conn.close()

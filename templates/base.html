@@ -50,23 +50,30 @@
             {% endif %}
         </ul>
     </nav>
-    <!-- Varierende innhold -->
-    {% block content %}{% endblock %}
+    <main>
+        <!-- Varierende innhold -->
+        {% block content %}{% endblock %}
 
-    <!-- Flash-meldinger -->
-    <!-- Kilde: Flask sin Dokumentasjon. Se kilder "Flash med Flask". -->
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-
+        <!-- Flash-meldinger -->
+        <!-- Kilde: Flask sin Dokumentasjon. Se kilder "Flash med Flask". -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </main>
     <footer>
-        <a href="{{ url_for('faq') }}">FAQ</a>
+        <h3 class="text-logo">IBDb</h3>
+        <div>
+            <h3>Help</h3>
+            <ul>
+                <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+            </ul>
+        </div>
     </footer>
 </body>
 
