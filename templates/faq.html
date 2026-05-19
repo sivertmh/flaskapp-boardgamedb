@@ -1,10 +1,29 @@
 {% extends "base.html" %}
 
+{% block head %}
+<link rel="stylesheet" href="../static/stylesheets/faq.css">
+{% endblock %}
+
 {% block title %}FAQ{% endblock %}
 
 {% block content %}
-<h1 class="general-heading">Frequently Asked Questions</h1>
-<h2 class="general-heading">How do I create an account?</h2>
-<p>To create an account, go to the login page and follow the link to sign up. <br> To be more specific, click "Log In" in the navigational bar, then find the link in the text "Don't have a user? You can sign up here." and enter your details and create your account.</p>
+<h1>Frequently Asked Questions</h1>
+<h2>How do I create an account?</h2>
+<p>To create an account, go to the login page and follow the link to sign up. <br> To be more specific, click "Log In"
+    in the navigational bar, then find the link in the text "Don't have a user? You can sign up here." and enter your
+    details to create your account.</p>
 
+<h2>How do I log in?</h2>
+<p>After having created a account, you can log in. Go to the login-page and enter required details. If you have
+    deactivated your account, you will not be able to log in.</p>
+
+<h2>Can I delete my account?</h2>
+<p>Yes, you will find this option on your account page. Near the bottom of the page, you should be able to find the
+    "Danger Zone". To delete your account, type in the username and password first. Upon clicking the "Delete account"
+    button, you will be asked to confirm the deletion.</p>
+
+<br>
+
+<h3>Do you have any more questions?</h3>
+<p>If we are missing any questions you want the answer to, you can submit them in the form below.</p>
 {% endblock %}

@@ -130,23 +130,44 @@ boardgame-site/
 - Navn: role
 - Beskrivelse: Inneholder forskjellige roller som brukere kan ha. Her må jeg kjøre en manuell Insert, eller lage en funksjon i Python-filen.
 
+**Tabell 4:**
+
+- Navn: question
+- Beskrivelse: Inneholder spørsmål om nettsiden fra brukere. Den har derfor fremmednøkkel til brukere sin ID.
+
 ### Tabellstruktur i Databasen
 
 Videre ser du strukturen på kommandoene brukt til å skape tabellene. Hvis du vil ha en mer grafisk fremstilling av tabellene, kan du sjekke ut [_tabellstruktur.md_](./dokumentasjon/tabellstruktur.md) som du finner i dokumentasjonsmappen.
 
 ```sql
--- Tabell 1
+-- Rolletabell
+CREATE TABLE role (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(20)
+);
+-- Innhold til rolletabell
+INSERT INTO role (name) VALUES ("admin"), ("editor"), ("user");
 
+-- Rolletabellens innhold ser dermed slik ut:
++----+--------+
+| id | name   |
++----+--------+
+|  1 | admin  |
+|  2 | editor |
+|  3 | user   |
++----+--------+
+
+-- Brukertabell
 CREATE TABLE `user` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password CHAR(60) NOT NULL,
-    role_id INT, FOREIGN KEY (role_id) REFERENCES role(id) DEFAULT 3
+    role_id INT, FOREIGN KEY (role_id) REFERENCES role(id) DEFAULT 3,
+    active INT 
 );
 
--- Tabell 2
-
+-- Brettspilltabell
 CREATE TABLE boardgame (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -157,27 +178,14 @@ CREATE TABLE boardgame (
     description TEXT CHARACTER SET utf8mb4
     );
 
--- Tabell 3
-
-CREATE TABLE role (
+-- Spørsmålstabell
+CREATE TABLE question (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(20)
-)
+    question TEXT NOT NULL,
+    created_on DEFAULT TIMESTAMP
+    user_id INT NOT NULL FOREIGN KEY (user_id) REFERENCES user(id)
+);
 
--- Innhold til tabell 3
-
-INSERT INTO role (name) VALUES ("admin"), ("editor"), ("user");
-
--- Rolle-tabellens innhold ser dermed slik ut:
-
-+----+--------+
-| id | name   |
-+----+--------+
-|  1 | admin  |
-|  2 | editor |
-|  3 | user   |
-+----+--------+
--- Her ser man hvilken id som tilhører hvilken rolle
 ```
 
 ### Hvordan sette opp dette systemet

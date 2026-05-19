@@ -175,3 +175,12 @@ footer div {
     border-radius: 3px;
     width: fit-content;
 }
+
+.footer__links {
+    list-style: none;
+}
+
+.footer__links li::before {
+    content: "\2192";
+    margin-right: 5px;
+}
