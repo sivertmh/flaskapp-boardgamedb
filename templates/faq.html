@@ -22,8 +22,32 @@
     "Danger Zone". To delete your account, type in the username and password first. Upon clicking the "Delete account"
     button, you will be asked to confirm the deletion.</p>
 
+<h2>I see some boardgames missing, how do I register these?</h2>
+<p>Only admins and editors are authorized to register new boardgames to the website and database. If you want to become
+    an editor for the website, you can apply via the contact form.</p>
+
+<h2>How can I log out?</h2>
+<p>You will be able to find the "log out" button located on your account page, near the bottom of the page. Just click
+    it and you're good to go!</p>
+
 <br>
 
 <h3>Do you have any more questions?</h3>
-<p>If we are missing any questions you want the answer to, you can submit them in the form below.</p>
+<p>If we are missing any questions you want the answer to, you can submit them in the form below. We will try to answer
+    your question as soon as possible.</p>
+
+<div class="user-form-cont">
+    <div>
+        <form method="POST" action="{{ url_for('faq') }}">
+            <label for="email">Email</label><br>
+            <input type="text" name="email" placeholder="Your account's email..." required><br><br>
+
+            <label for="question">Question</label><br>
+            <input type="text" name="question" placeholder="Your question..." required><br><br>
+
+            <button type="submit">Submit Question</button>
+        </form>
+    </div>
+</div>
+
 {% endblock %}

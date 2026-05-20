@@ -273,8 +273,28 @@ def dashboard():
             flash("Wrong username or password.", "error")
     return render_template('dashboard.html')
 
-@app.route('/faq')
+@app.route('/faq', methods=["GET", "POST"])
 def faq():
+    if request.method == "POST":
+        email = request.form["email"]
+        question = request.form["question"]
+
+        conn = db_connect() if rpi_db else ltdb_connect()
+        cursor = conn.cursor()
+
+        # Henter brukers id basert på oppgitt epost i form
+        cursor.execute("SELECT id FROM user WHERE email=%s", (email,))
+        row = cursor.fetchone()
+        
+        if row is None:
+            flash("You need to be logged in to submit questions.", "error")
+            
+        userid = row[0]
+        
+        # Setter inn spørsmål i databasen (spørsmål og brukers id)
+        cursor.execute("INSERT INTO question (question, user_id) VALUES (%s, %s)", (question, userid))
+        conn.commit()
+        flash("Question successfully submitted! We will answer it as soon as possible.")
     return render_template('faq.html')
 
 if __name__ == "__main__":

@@ -164,7 +164,7 @@ CREATE TABLE `user` (
     email VARCHAR(255) NOT NULL UNIQUE,
     password CHAR(60) NOT NULL,
     role_id INT, FOREIGN KEY (role_id) REFERENCES role(id) DEFAULT 3,
-    active INT 
+    active INT
 );
 
 -- Brettspilltabell
@@ -182,8 +182,9 @@ CREATE TABLE boardgame (
 CREATE TABLE question (
     id INT AUTO_INCREMENT PRIMARY KEY,
     question TEXT NOT NULL,
-    created_on DEFAULT TIMESTAMP
-    user_id INT NOT NULL FOREIGN KEY (user_id) REFERENCES user(id)
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES `user`(id)
 );
 
 ```
