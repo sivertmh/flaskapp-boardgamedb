@@ -184,3 +184,31 @@ footer div {
     content: "\2192";
     margin-right: 5px;
 }
+
+.alert {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 20px;
+
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid black;
+    border-radius: 10px;
+    /* Box shadow. https://getcssscan.com/css-box-shadow-examples */
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.alert-success {
+    border-color: #397a23;
+    background-color: #f7fff5;
+    color: #397a23;
+}
+
+.alert-error {
+    border-color: #cc2500;
+    background-color: #ffe8e7;
+    color: #cc2500;
+}

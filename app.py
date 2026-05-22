@@ -147,7 +147,7 @@ def login():
                 return redirect(url_for("index"))
         # Feilmelding til bruker            
         else:
-            flash("Invalid username or password", "error")
+            flash("Invalid username or password.", "error")
             return redirect(url_for("login"))
         
         cursor.close()
@@ -251,21 +251,27 @@ def dashboard():
         form_password = request.form["password"].encode('utf-8')
         
         # Henter passord fra db basert på brukernavn i session
-        cursor.execute("SELECT password FROM user WHERE username=%s", (username,))
+        cursor.execute("SELECT password, id FROM user WHERE username=%s", (username,))
+        user_info = cursor.fetchone()
         # Gjør om hentet passord til bytes
-        password_from_db = cursor.fetchone()[0].encode('utf-8')
+        user_password = user_info[0].encode('utf-8')
+        user_id = user_info[1]
         
         cursor.close()
         conn.close()
         
         # Sletting av bruker
         # Betingelsen sjekker brukernavnene mot hverandre og passordene mot hverandre 
-        if session['username'] == form_username and bcrypt.checkpw(form_password, password_from_db):
+        if session['username'] == form_username and bcrypt.checkpw(form_password, user_password):
             conn = db_connect() if rpi_db else ltdb_connect()
             cursor = conn.cursor()
-            
-            cursor.execute("UPDATE user SET active=0 WHERE username=%s", (username,))
+
+            cursor.execute("""
+                UPDATE user
+                SET active=0, username=CONCAT("redacted_username", %s), email=CONCAT("redacted_email", %s), password='REDACTED'
+                WHERE username=%s""", (user_id, user_id, username))
             conn.commit()
+            
             session.clear()
             flash("Successfully deleted account.", "success")
             return redirect(url_for('index'))

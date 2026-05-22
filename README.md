@@ -110,7 +110,9 @@ boardgame-site/
 │ └── results.html
 ├── static/
 │ ├── media/
-│ └── stylesheets/style.css
+│ └── stylesheets/
+│├── style.css
+│ └── faq.css
 └── .env
 
 ### Oversikt over tabeller
@@ -140,7 +142,7 @@ boardgame-site/
 Videre ser du strukturen på kommandoene brukt til å skape tabellene. Hvis du vil ha en mer grafisk fremstilling av tabellene, kan du sjekke ut [_tabellstruktur.md_](./dokumentasjon/tabellstruktur.md) som du finner i dokumentasjonsmappen.
 
 ```sql
--- Rolletabell
+-- Rolletabell (nr. 3)
 CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(20)
@@ -157,7 +159,7 @@ INSERT INTO role (name) VALUES ("admin"), ("editor"), ("user");
 |  3 | user   |
 +----+--------+
 
--- Brukertabell
+-- Brukertabell (nr. 1)
 CREATE TABLE `user` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
@@ -167,7 +169,7 @@ CREATE TABLE `user` (
     active INT
 );
 
--- Brettspilltabell
+-- Brettspilltabell (nr. 2)
 CREATE TABLE boardgame (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -178,7 +180,7 @@ CREATE TABLE boardgame (
     description TEXT CHARACTER SET utf8mb4
     );
 
--- Spørsmålstabell
+-- Spørsmålstabell (nr. 4)
 CREATE TABLE question (
     id INT AUTO_INCREMENT PRIMARY KEY,
     question TEXT NOT NULL,
