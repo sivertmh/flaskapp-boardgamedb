@@ -228,6 +228,18 @@ waitress-serve --listen 0.0.0.0:8080 app:app
 
 Utenom server/database, er dette alt du trenger for grunnleggende bruk/test av Flask-appen. Uten kobling til database vises ikke brettspill og login vil ikke fungere. Hvis du endrer databasekoblingen til en db du har tilgang til, vil du kunne kjøre _app.py_ og tabeller vil opprettes.
 
+Hvis du får tilgang til database-filen kan du kjøre denne kommandoen for å importere databasen inn i Mariadb (Windows):
+
+```pwsh
+Get-Content "[databasefil]" | mariadb -u [brukernavn] -p [database]
+```
+
+Tilsvarende på linux vil være mye enklere:
+
+```bash
+mariadb -u [brukernavn] -p [database] < [databasefil]
+```
+
 ---
 
 **Kilder:**

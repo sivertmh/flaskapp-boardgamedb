@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 
+<!-- Ekstra innhold i head -->
 {% block head %}
 <link rel="stylesheet" href="../static/stylesheets/faq.css">
 {% endblock %}
 
+<!-- Tittel -->
 {% block title %}FAQ{% endblock %}
 
+<!-- Innhold -->
 {% block content %}
 <h1>Frequently Asked Questions</h1>
 <h2>How do I create an account?</h2>
@@ -36,6 +39,7 @@
 <p>If we are missing any questions you want the answer to, you can submit them in the form below. We will try to answer
     your question as soon as possible.</p>
 
+{% if session['username'] %}
 <div class="user-form-cont">
     <div>
         <form method="POST" action="{{ url_for('faq') }}">
@@ -49,5 +53,9 @@
         </form>
     </div>
 </div>
+{% else %}
+<p>To submit questions, you must be logged in.</p>
+<a href="{{ url_for('login') }}">Click here to log in &rarr;</a>
 
+{% endif %}
 {% endblock %}

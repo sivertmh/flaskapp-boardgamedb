@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %} - IBDb</title>
+    <title>{% block title %}<!-- Tittel -->{% endblock %} - IBDb</title>
     <link rel="stylesheet" href="../static/stylesheets/style.css">
+    <!-- Block head lar meg legge til f.eks.ekstra css i andre templates -->
     {% block head %}{% endblock %}
 </head>
 
@@ -52,11 +53,11 @@
         </ul>
     </nav>
     <main>
-        <!-- Varierende innhold -->
+        <!-- Innhold -->
         {% block content %}{% endblock %}
 
         <!-- Flash-meldinger -->
-        <!-- Kilde: Flask sin Dokumentasjon. Se kilder "Flash med Flask". -->
+        <!-- Kilde: Flask sin Dokumentasjon. Se kilde "Flash med Flask". -->
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
                 {% for category, message in messages %}

@@ -11,12 +11,30 @@
 
 <!-- Sletting av bruker -->
 <form action="{{ url_for('dashboard') }}" method="POST">
-    <legend >Danger Zone! Deletion of account</legend>
+    <legend>Danger Zone! Deletion of account</legend>
     <input type="text" name="username" placeholder="Username..." />
     <input type="password" name="password" placeholder="Password..." />
     <input type="submit" value="Delete account"
         onclick="return confirm('Are you sure you want to delete your account? These changes are permanent.')"></input>
 </form>
+
+<!-- Spørsmål fra database -->
+<table>
+    <tr>
+        <th>Question</th>
+        <th>Time Created</th>
+        <th>By User</th>
+    </tr>
+    {% if question_info %}
+        {% for q in question_info %}
+            <tr>
+                <td>{{ q[0] }}</td>
+                <td>{{ q[1] }}</td>
+                <td>{{ q[2] }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+</table>
 
 <!-- Utlogging -->
 <button><a href="{{ url_for('logout') }}">Log out</a></button>

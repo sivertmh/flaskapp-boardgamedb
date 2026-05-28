@@ -239,7 +239,16 @@ def search():
 # Route for dashbord
 @app.route('/dashboard', methods=["GET", "POST"])
 def dashboard():
+    # DB-kobling
+    conn = db_connect() if rpi_db else ltdb_connect()
+    cursor = conn.cursor()
+    
+    # Henter spørsmål fra DB
+    cursor.execute("SELECT q.question, q.created_on, u.username AS user FROM question q INNER JOIN user u ON u.id = q.user_id;")
+    question_info = cursor.fetchone()
+    
     if request.method == "POST":
+        # DB-kobling
         conn = db_connect() if rpi_db else ltdb_connect()
         cursor = conn.cursor()
         
@@ -277,7 +286,7 @@ def dashboard():
             return redirect(url_for('index'))
         else:
             flash("Wrong username or password.", "error")
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', question_info=question_info)
 
 @app.route('/faq', methods=["GET", "POST"])
 def faq():
@@ -300,7 +309,7 @@ def faq():
         # Setter inn spørsmål i databasen (spørsmål og brukers id)
         cursor.execute("INSERT INTO question (question, user_id) VALUES (%s, %s)", (question, userid))
         conn.commit()
-        flash("Question successfully submitted! We will answer it as soon as possible.")
+        flash("Question successfully submitted! We will try to answer it as soon as possible.")
     return render_template('faq.html')
 
 if __name__ == "__main__":
