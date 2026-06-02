@@ -191,6 +191,7 @@ footer div {
     right: 50px;
 
     width: fit-content;
+    max-width: 300px;
     height: fit-content;
     padding: 10px 20px;
 

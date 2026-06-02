@@ -21,38 +21,38 @@ def create_tables():
     conn = db_connect() if rpi_db else ltdb_connect()
     cursor = conn.cursor()
     
-# Rolletabell
+    # Rolletabell
     cursor.execute("""
-CREATE TABLE role (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(20)
-)
-""")
+        CREATE TABLE role (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(20)
+        )
+        """)
     
-# Brukertabell
-# Bruker backticks på tabellnavnet "user" p.g.a. eksisterende Mysql-fenomen.
+    # Brukertabell
+    # Bruker backticks på tabellnavnet "user" p.g.a. eksisterende Mysql-fenomen.
     cursor.execute("""
-CREATE TABLE `user` (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password CHAR(60) NOT NULL,
-    role_id INT, FOREIGN KEY (role_id) REFERENCES role(id)
-)
-""")
+        CREATE TABLE `user` (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(255) NOT NULL UNIQUE,
+            email VARCHAR(255) NOT NULL UNIQUE,
+            password CHAR(60) NOT NULL,
+            role_id INT, FOREIGN KEY (role_id) REFERENCES role(id)
+        )
+        """)
 
-# Brettspilltabell
+    # Brettspilltabell
     cursor.execute("""
-CREATE TABLE boardgame (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    year_published INT,
-    creator VARCHAR(255),
-    publisher VARCHAR(255),
-    img_filename VARCHAR(255),
-    description TEXT CHARACTER SET utf8mb4
-    )
-""")
+        CREATE TABLE boardgame (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            year_published INT,
+            creator VARCHAR(255),
+            publisher VARCHAR(255),
+            img_filename VARCHAR(255),
+            description TEXT CHARACTER SET utf8mb4
+            )
+        """)
 
     conn.commit()
     conn.close()
@@ -115,16 +115,15 @@ def login():
         conn = db_connect() if rpi_db else ltdb_connect()
         cursor = conn.cursor(dictionary=True)
         
-        # Henter brukernavn.
+        # Henter brukernavn fra db ved hjelp av form-data
         cursor.execute("SELECT * FROM user WHERE username=%s", (username,))
         user = cursor.fetchone()
         
-        
-        # Henter passord og gjør om til bytes.
         if user:
+            # Henter passord og gjør om til bytes.
             db_password = user['password'].encode('utf-8')
-        # Hvis den ikke finner bruker, gis den tom verdi
         else:
+            # Hvis den ikke finner bruker, gis den tom verdi
             db_password = None
 
         if db_password:
@@ -141,7 +140,7 @@ def login():
                 session['username'] = user['username']
                 session['role_id'] = user['role_id']
                 # Session-cookie for rollenavn
-                session['role_name'] = role['name'].capitalize()
+                session['role_name'] = role['name']
                 
                 flash("Successfully logged in!", "success")
                 return redirect(url_for("index"))
@@ -297,19 +296,20 @@ def faq():
         conn = db_connect() if rpi_db else ltdb_connect()
         cursor = conn.cursor()
 
-        # Henter brukers id basert på oppgitt epost i form
-        cursor.execute("SELECT id FROM user WHERE email=%s", (email,))
+        # Henter brukers id
+        # Gir tom verdi om oppgitt email stemmer med pålogget bruker
+        cursor.execute("SELECT id FROM user WHERE email=%s AND username=%s", (email, session['username']))
         row = cursor.fetchone()
         
         if row is None:
-            flash("You need to be logged in to submit questions.", "error")
-            
-        userid = row[0]
-        
-        # Setter inn spørsmål i databasen (spørsmål og brukers id)
-        cursor.execute("INSERT INTO question (question, user_id) VALUES (%s, %s)", (question, userid))
-        conn.commit()
-        flash("Question successfully submitted! We will try to answer it as soon as possible.")
+            flash("You need to be logged in to submit questions. If you are logged in, you used an email that does not belong to your account.", "error")
+        else:
+            userid = row[0]
+
+            # Setter inn spørsmål i databasen (spørsmål og brukers id)
+            cursor.execute("INSERT INTO question (question, user_id) VALUES (%s, %s)", (question, userid))
+            conn.commit()
+            flash("Question successfully submitted! We will try to answer it as soon as possible.")
     return render_template('faq.html')
 
 if __name__ == "__main__":
