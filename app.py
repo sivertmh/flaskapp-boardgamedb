@@ -244,7 +244,7 @@ def dashboard():
     
     # Henter spørsmål fra DB
     cursor.execute("SELECT q.question, q.created_on, u.username AS user FROM question q INNER JOIN user u ON u.id = q.user_id;")
-    question_info = cursor.fetchone()
+    question_info = cursor.fetchall()
     
     if request.method == "POST":
         # DB-kobling
