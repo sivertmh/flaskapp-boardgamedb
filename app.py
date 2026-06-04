@@ -16,34 +16,39 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
 
-def create_tables():
+def create_db_structure():
     # ltdb/db
     conn = db_connect() if rpi_db else ltdb_connect()
     cursor = conn.cursor()
     
     # Rolletabell
+    # Må lages før brukertabell pga foreign key.
     cursor.execute("""
-        CREATE TABLE role (
+        CREATE TABLE IF NOT EXISTS role (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(20)
         )
-        """)
+    """)
+    # Innhold til rolletabell
+    cursor.execeute("""
+        INSERT INTO role (name) VALUES ("admin"), ("editor"), ("user")
+    """)
     
     # Brukertabell
     # Bruker backticks på tabellnavnet "user" p.g.a. eksisterende Mysql-fenomen.
     cursor.execute("""
-        CREATE TABLE `user` (
+        CREATE TABLE IF NOT EXISTS `user` (
             id INT AUTO_INCREMENT PRIMARY KEY,
             username VARCHAR(255) NOT NULL UNIQUE,
             email VARCHAR(255) NOT NULL UNIQUE,
             password CHAR(60) NOT NULL,
             role_id INT, FOREIGN KEY (role_id) REFERENCES role(id)
         )
-        """)
+    """)
 
     # Brettspilltabell
     cursor.execute("""
-        CREATE TABLE boardgame (
+        CREATE TABLE IF NOT EXISTS boardgame (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             year_published INT,
@@ -51,18 +56,29 @@ def create_tables():
             publisher VARCHAR(255),
             img_filename VARCHAR(255),
             description TEXT CHARACTER SET utf8mb4
-            )
-        """)
+        )
+    """)
+    
+    # Spørsmålstabell
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS question (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            question TEXT NOT NULL,
+            created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            user_id INT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES `user`(id)
+        )
+    """)
 
     conn.commit()
     conn.close()
 
 # Prøver å lage tabeller
 try:
-    create_tables()
-    print("Tabeller ble laget!")
+    create_db_structure()
+    print("Databasestruktur ble laget!")
 except:
-    print("Tabeller ble ikke laget. (ignorer om de finnes fra før)")
+    print("Error: Databasestruktur ble ikke laget.")
 
 # Hjemside
 @app.route("/")
