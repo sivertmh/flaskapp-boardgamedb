@@ -4,15 +4,15 @@ import bcrypt
 import os
 from waitress import serve
 
-# Kobling til db
+# Kobling til pi-db og laptop-db (laptop brukes når pi ikke er tilgjengelig)
 from python.conn import db_connect
-# Kobling til laptop-db (brukes når pi ikke er tilgjengelig)
 from python.laptop_conn import ltdb_connect
 
-# Bestemmer om rpi- eller laptop-db-kobling skal brukes
-rpi_db = False
-
 load_dotenv()
+
+# Bestemmer om rpi- eller laptop-db-kobling skal brukes
+rpi_db = True
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
 
