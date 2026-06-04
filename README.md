@@ -64,6 +64,8 @@ Jeg vil utvikle en funksjon som lar en bruker trykke en "favoritt-knapp" på bre
 
 Hvis vi skal se på det mer detaljert vil jeg legge til en ny "hjerte-knapp" på hver av brettspillene på forsiden som kan trykkes på for å legge til i databasen i en koblingstabell mellom brettspill og brukere. Trykker du på knappen igjen, skal den fjernes fra tabellen. Når det gjelder koblingstabellen, kan jeg lage den på eksamen for å vise kunnskap til eksaminator og sensor innenfor SQL. Her kan jeg i samme slengen vise frem diagrammet for å forklare hvorfor tabellen vil fungere. Det er fullt mulig og kanskje smartest om jeg lager denne hjerteknappen sin stil i forberedelsen, slik at jeg ikke må bruke tid på CSS på eksamen.
 
+For å utføre dette i Python Flask kan jeg lage en route som har parameter som kan hentes fra knapp i templaten der brettspillene vises. Så bruke en sql-setning for å se om data finnes for å så legge den til hvis den ikke finnes fra før.
+
 Dette er en av de mer avanserte tingene jeg kan utføre som vil vise mye kompetanse om jeg klarer å utføre det.
 
 ##### Oversiktlige søkeresultater

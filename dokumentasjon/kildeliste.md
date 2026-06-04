@@ -39,3 +39,10 @@ Her oppgir jeg kilder brukt under prøveeksamen, på en måte slik at andre kan 
 - _SQL UPDATE Statement_: [https://www.w3schools.com/SQL/sql_update.asp](https://www.w3schools.com/SQL/sql_update.asp)
 
 - _SQL Data Types_ : [https://www.geeksforgeeks.org/sql/sql-data-types/](https://www.geeksforgeeks.org/sql/sql-data-types/)
+
+## Under Eksamen
+
+Her oppgir jeg kilder brukt under eksamen, på en måte slik at andre kan finne fram til dem. Noen steder i koden finner du kommentarer om at det er brukt kilder, disse finnes som regel i mer detalj i dette dokumentet.
+
+
+

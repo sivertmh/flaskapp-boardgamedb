@@ -7,17 +7,13 @@
 {% block content %}
 
 <p><b>Username:</b> {{ session['username'] }}</p>
+<p><b>Email:</b> {{ user_info[1] }}</p>
 <p><b>Role:</b> {{ session['role_name'] }}</p>
 
-<!-- Sletting av bruker -->
-<form action="{{ url_for('dashboard') }}" method="POST">
-    <legend>Danger Zone! Deletion of account</legend>
-    <input type="text" name="username" placeholder="Username..." />
-    <input type="password" name="password" placeholder="Password..." />
-    <input type="submit" value="Delete account"
-        onclick="return confirm('Are you sure you want to delete your account? These changes are permanent.')"></input>
-</form>
-
+{% if session['role_id'] == 1 %} {# admin #}
+<br>
+<hr>
+<br>
 <!-- Spørsmål fra database -->
 <table>
     <tr>
@@ -35,6 +31,24 @@
         {% endfor %}
     {% endif %}
 </table>
+{% endif %}
+
+<br>
+<hr>
+<br>
+
+<!-- Sletting av bruker -->
+<form action="{{ url_for('dashboard') }}" method="POST">
+    <legend>Danger Zone! Deletion of account</legend>
+    <input type="text" name="username" placeholder="Username..." />
+    <input type="password" name="password" placeholder="Password..." />
+    <input type="submit" value="Delete account"
+        onclick="return confirm('Are you sure you want to delete your account? These changes are permanent.')"></input>
+</form>
+
+<br>
+<hr>
+<br>
 
 <!-- Utlogging -->
 <button><a href="{{ url_for('logout') }}">Log out</a></button>

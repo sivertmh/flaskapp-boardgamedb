@@ -11,7 +11,7 @@ from python.laptop_conn import ltdb_connect
 load_dotenv()
 
 # Bestemmer om rpi- eller laptop-db-kobling skal brukes
-rpi_db = True
+rpi_db = False
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
@@ -26,12 +26,12 @@ def create_db_structure():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS role (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(20)
+            name VARCHAR(20) UNIQUE NOT NULL
         )
     """)
     # Innhold til rolletabell
-    cursor.execeute("""
-        INSERT INTO role (name) VALUES ("admin"), ("editor"), ("user")
+    cursor.execute("""
+        INSERT IGNORE INTO role (name) VALUES ("admin"), ("editor"), ("user")
     """)
     
     # Brukertabell
@@ -42,7 +42,8 @@ def create_db_structure():
             username VARCHAR(255) NOT NULL UNIQUE,
             email VARCHAR(255) NOT NULL UNIQUE,
             password CHAR(60) NOT NULL,
-            role_id INT, FOREIGN KEY (role_id) REFERENCES role(id)
+            role_id INT, FOREIGN KEY (role_id) REFERENCES role(id),
+            active TINYINT(1) DEFAULT 1
         )
     """)
 
@@ -77,8 +78,8 @@ def create_db_structure():
 try:
     create_db_structure()
     print("Databasestruktur ble laget!")
-except:
-    print("Error: Databasestruktur ble ikke laget.")
+except Exception as e:
+    print(f"Error: Databasestruktur ble ikke laget. {e}")
 
 # Hjemside
 @app.route("/")
@@ -152,16 +153,15 @@ def login():
                 cursor.execute("SELECT name FROM role WHERE id=%s", (user['role_id'],))
                 role = cursor.fetchone()
                 
-                # Session-cookies for brukerinfo settes
+                # Session-cookies
                 session['username'] = user['username']
                 session['role_id'] = user['role_id']
-                # Session-cookie for rollenavn
                 session['role_name'] = role['name']
                 
                 flash("Successfully logged in!", "success")
                 return redirect(url_for("index"))
-        # Feilmelding til bruker            
         else:
+            # Feilmelding til bruker          
             flash("Invalid username or password.", "error")
             return redirect(url_for("login"))
         
@@ -179,9 +179,6 @@ def logout():
 @app.route("/register_boardgame", methods=["GET", "POST"])
 def register_boardgame():
     
-    conn = db_connect() if rpi_db else ltdb_connect()
-    cursor = conn.cursor()
-    
     # Fra "How to use Flask-Session in Python Flask". Se kilder.
     # Sjekker om bruker er logget inn og redirecter til index hvis ikke.
     if not session.get("username") or not session.get("role_id"):
@@ -194,6 +191,9 @@ def register_boardgame():
     if session["role_id"] not in (1, 2):
         flash("You are not authorized to view this page.", "error")
         return redirect(url_for("index"))
+    
+    conn = db_connect() if rpi_db else ltdb_connect()
+    cursor = conn.cursor()
     
     # Kjøres ved POST-ing av brettspill-form.
     if request.method == "POST":
@@ -262,6 +262,9 @@ def dashboard():
     cursor.execute("SELECT q.question, q.created_on, u.username AS user FROM question q INNER JOIN user u ON u.id = q.user_id;")
     question_info = cursor.fetchall()
     
+    cursor.execute("SELECT username, email FROM user WHERE username=%s", (session["username"],))
+    user_info = cursor.fetchone()
+    
     if request.method == "POST":
         # DB-kobling
         conn = db_connect() if rpi_db else ltdb_connect()
@@ -301,7 +304,7 @@ def dashboard():
             return redirect(url_for('index'))
         else:
             flash("Wrong username or password.", "error")
-    return render_template('dashboard.html', question_info=question_info)
+    return render_template('dashboard.html', question_info=question_info, user_info=user_info)
 
 @app.route('/faq', methods=["GET", "POST"])
 def faq():
