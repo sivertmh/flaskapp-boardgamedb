@@ -154,6 +154,11 @@ boardgame-site/
 - Navn: question
 - Beskrivelse: Inneholder spørsmål om nettsiden fra brukere. Den har derfor fremmednøkkel til brukere sin ID.
 
+**Tabell 5:**
+
+- Navn: favorited_boardgame
+- Beskrivelse: En koblingstabell (junction table) mellom *user* og *boardgame*. Brukes til favoritt-funksjonen som lar bruker se sine favorittbrettspill på brukersiden sin.
+
 ### Tabellstruktur i Databasen
 
 Videre ser du strukturen på kommandoene brukt til å skape tabellene. Hvis du vil ha en mer grafisk fremstilling av tabellene, kan du sjekke ut [_tabellstruktur.md_](./dokumentasjon/tabellstruktur.md) som du finner i dokumentasjonsmappen.
@@ -206,73 +211,93 @@ CREATE TABLE question (
     FOREIGN KEY (user_id) REFERENCES `user`(id)
 );
 
+-- Koblingstabell for favorittbrettspill (nr. 5)
+CREATE TABLE favorited_boardgame (
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, 
+  user_id INT NOT NULL, 
+  boardgame_id INT NOT NULL, 
+  FOREIGN KEY (user_id) REFERENCES user(id), 
+  FOREIGN KEY (boardgame_id) REFERENCES boardgame(id)
+);
+
 ```
 
 ### Hvordan sette opp dette systemet
 
-Før du starter må du ha installert disse på systemet (dependencies):
+1. Før du starter må du ha installert disse på systemet (dependencies):
 
 - git
 - python
 
-Deretter kan du starte ved å klone prosjektet:
+```bash
+# Kjør om du ikke har disse pakkene installert
+sudo apt install git python
+```
+
+2. Deretter kan du starte ved å klone prosjektet:
 
 ```bash
-git clone https://github.com/sivertmh/boardgame-site.git
+git clone https://github.com/sivertmh/flaskapp-boardgamedb
 ```
 
 Så må du installere nødvendige pakker for appen (Det er lurt å gjøre dette i et **venv** i python).
 
-Hvis du vil opprette et venv:
+3. Hvis du vil opprette et venv:
 
 ```bash
 # Om du ikke har et venv fra før
 python -m venv .venv
 ```
 
-Så last ned pakkene i ved hjelp av requirements-filen:
+4. Så last ned pakkene i ved hjelp av requirements-filen:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-For å få kobling til database, må du overføre dotenv-filen manuelt, siden den ikke ligger på Github (her er jeg i samme mappe som .env):
+5. For å få kobling til database, må du overføre dotenv-filen manuelt, siden den ikke ligger på Github (legg merke til at jeg er i samme mappe som .env):
 
-```
+```bash
 sudo scp .env [user]@[host]:[sti_til_destinasjon]
 ```
 
-Nå kan du kjøre prosjektet lokalt med Flask fra terminalen:
+Eksempel:
+
+```bash
+sudo scp .env sivert@sspi3.local:/srv/myapp
+```
+
+6. Nå kan du kjøre prosjektet lokalt med Flask fra terminalen (dette er hovedsakelig for videre utvikling av appen):
 
 ```bash
 python -m flask run
 ```
 
-
-
-Du kan også kjøre med Waitress (kan da nås av andre på LAN):
+7. Du kan også kjøre med Waitress (kan da nås av andre på LAN) for et mer ordentlig deployment:
 
 ```bash
-# 0.0.0.0 gjør den tilgjengelig utover LAN-et med ip-adressen til systemet den kjøres på
+# 0.0.0.0 gjør den tilgjengelig utover LAN-et med ip-adressen til systemet den kjøres på (kjøres da på port 8080)
 waitress-serve --host 0.0.0.0 app:app
 
-# Eller, mer eksplisitt:
+# Eller, mer eksplisitt (om ønskelig kan 8080 byttes ut med en annen port):
 waitress-serve --listen 0.0.0.0:8080 app:app
 ```
 
-Utenom server/database, er dette alt du trenger for grunnleggende bruk/test av Flask-appen. Uten kobling til database vises ikke brettspill og login vil ikke fungere. Hvis du endrer databasekoblingen til en db du har tilgang til, vil du kunne kjøre _app.py_ og tabeller vil opprettes.
+Utenom server/database, er dette alt du trenger for grunnleggende bruk/test av Flask-appen. Uten kobling til database vises ikke brettspill og login vil ikke fungere. Hvis du endrer databasekoblingen til en database du har tilgang til (en ny tom database), vil du kunne kjøre _app.py_ og tabeller vil opprettes.
 
-Hvis du får tilgang til database-filen kan du kjøre denne kommandoen for å importere databasen inn i Mariadb (Windows):
+8. Hvis du får tilgang til database-filen kan du kjøre denne kommandoen for å importere databasen inn i Mariadb (Windows):
 
 ```pwsh
 Get-Content "[databasefil]" | mariadb -u [brukernavn] -p [database]
 ```
 
-Tilsvarende på linux vil være mye enklere:
+Tilsvarende på Linux vil være mye enklere:
 
 ```bash
 mariadb -u [brukernavn] -p [database] < [databasefil]
 ```
+
+Om denne metoden svikter, er det også mulig å logge inn i databasen lime inn og kjøre koden fra sql-filen.
 
 ---
 

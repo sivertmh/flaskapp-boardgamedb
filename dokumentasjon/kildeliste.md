@@ -46,3 +46,6 @@ Her oppgir jeg kilder brukt under eksamen, på en måte slik at andre kan finne 
 
 - _Flask-Limiter_: [https://flask-limiter.readthedocs.io/en/stable/](https://flask-limiter.readthedocs.io/en/stable/)
 
+- _SQL FOREIGN KEY Keyword_: [https://www.w3schools.com/SQL/sql_ref_foreign_key.asp](https://www.w3schools.com/SQL/sql_ref_foreign_key.asp)
+
+- _Terms of Service generert ved hjelp av Anthropics språkmodell Claude_: [https://claude.com/](https://claude.com/)

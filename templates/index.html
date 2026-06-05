@@ -14,16 +14,17 @@
 <div class="boardgame-showcase-cont">
     {% if bg_info %}
         {% for i in bg_info %}
-            <!-- i[0] = navn, i[1] = år, i[3] = bilde -->
+            <!-- i[0] = navn, i[1] = år, i[3] = bilde, i[4] = id -->
             <div class="boardgame-card-cont">
                 <img src="{{ i[3] }}" alt="Box cover image for {{ i[0] }}">
                 <!-- Brettspillnavn og år -->
                 <p>{{ i[0] }} ({{ i[1] }})</p>
                 {% if session['username'] %}
-                    <button>&#9825;</button>
-                    <button>&#9829;</button>
+                    <button>&#9829; test</button>
                     <!-- Brettspill-ID -->
-                    <form action="/favorite/{{ i[4] }}"></form>
+                    <form action="/favorite/{{ i[4] }}" method="POST">
+                        <button type="submit">&#9825;</button>
+                    </form>
                 {% endif %}
             </div>
         {% endfor %}

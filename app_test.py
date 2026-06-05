@@ -342,17 +342,17 @@ def faq():
             flash("Question successfully submitted! We will try to answer it as soon as possible.")
     return render_template('faq.html')
 
-@app.route('/favorites/<int:boardgame_id>', methods=["GET", "POST"])
+@app.route('/favorite/<int:boardgame_id>', methods=["GET", "POST"])
 def favorites(boardgame_id):
     if request.method == "POST":
         conn = db_connect() if rpi_db else ltdb_connect()
         cursor = conn.cursor()
         
-        cursor.execute("SELECT FROM favorited_boardgame boardgame_id WHERE user_id=%s", (boardgame_id,))
-        row = cursor.fetchone()
+        cursor.execute("SELECT boardgame_id FROM favorited_boardgame WHERE user_id=%s AND boardgame_id=%s", (session['username'], boardgame_id,))
+        favorite_bg_exists = cursor.fetchone()
         
-        if row:
-            cursor.execute("DELETE FROM favorited_boardgame WHERE favorite_boardgame boardgame_id WHERE user_id=%s", (boardgame_id,))
+        if favorite_bg_exists:
+            cursor.execute("DELETE FROM favorited_boardgame WHERE user_id=%s AND boardgame_id=%s", (session['username'], boardgame_id,))
         else:
             cursor.execute("INSERT INTO favorited_boardgame (user_id, boardgame_id) VALUES (%s, %s)", (session['username'], boardgame_id))
 

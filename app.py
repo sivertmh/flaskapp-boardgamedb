@@ -70,6 +70,17 @@ def create_db_structure():
             FOREIGN KEY (user_id) REFERENCES `user`(id)
         )
     """)
+    
+    # Favorited Boardgame
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS favorited_boardgame (
+            id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, 
+            user_id INT NOT NULL, 
+            boardgame_id INT NOT NULL, 
+            FOREIGN KEY (user_id) REFERENCES user(id), 
+            FOREIGN KEY (boardgame_id) REFERENCES boardgame(id)
+        )
+    """)
 
     conn.commit()
     conn.close()
@@ -156,6 +167,7 @@ def login():
                 # Session-cookies
                 session['username'] = user['username']
                 session['role_id'] = user['role_id']
+                session['user_id'] = user['id']
                 session['role_name'] = role['name']
                 
                 flash("Successfully logged in!", "success")
@@ -332,8 +344,14 @@ def faq():
             flash("Question successfully submitted! We will try to answer it as soon as possible.")
     return render_template('faq.html')
 
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')
 
-
+@app.route('/favorite/<int:boardgame_id>')
+def favorite(boardgame_id):
+    return None
+        
 if __name__ == "__main__":
     #app.run(debug=True)
     serve(app, host="0.0.0.0", port=8080)
