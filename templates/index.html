@@ -17,10 +17,13 @@
             <!-- i[0] = navn, i[1] = år, i[3] = bilde -->
             <div class="boardgame-card-cont">
                 <img src="{{ i[3] }}" alt="Box cover image for {{ i[0] }}">
+                <!-- Brettspillnavn og år -->
                 <p>{{ i[0] }} ({{ i[1] }})</p>
                 {% if session['username'] %}
                     <button>&#9825;</button>
                     <button>&#9829;</button>
+                    <!-- Brettspill-ID -->
+                    <form action="/favorite/{{ i[4] }}"></form>
                 {% endif %}
             </div>
         {% endfor %}

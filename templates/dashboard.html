@@ -6,6 +6,8 @@
 <!-- Innhold -->
 {% block content %}
 
+<h2>Account</h2>
+
 <p><b>Username:</b> {{ session['username'] }}</p>
 <p><b>Email:</b> {{ user_info[1] }}</p>
 <p><b>Role:</b> {{ session['role_name'] }}</p>
@@ -15,6 +17,9 @@
 <hr>
 <br>
 <!-- Spørsmål fra database -->
+
+<h2>Questions from Users</h2>
+
 <table>
     <tr>
         <th>Question</th>
@@ -37,11 +42,13 @@
 <hr>
 <br>
 
+<h2>Danger Zone</h2>
+
 <!-- Sletting av bruker -->
 <form action="{{ url_for('dashboard') }}" method="POST">
-    <legend>Danger Zone! Deletion of account</legend>
-    <input type="text" name="username" placeholder="Username..." />
-    <input type="password" name="password" placeholder="Password..." />
+    <legend>Danger Zone! Deletion of account. These changes are <b>permanent</b>.</legend><br>
+    <input type="text" name="username" placeholder="Username..." /><br><br>
+    <input type="password" name="password" placeholder="Password..." /><br><br>
     <input type="submit" value="Delete account"
         onclick="return confirm('Are you sure you want to delete your account? These changes are permanent.')"></input>
 </form>

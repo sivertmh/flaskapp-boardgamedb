@@ -113,6 +113,7 @@ Den siste runden kan jeg bruke på TOS og forklare til sensoren om ulike lover o
 
 Under ser du en oversikt av de funksjonelle delene som trengs i programmet:
 
+```
 boardgame-site/
 ├── app.py
 ├── templates/
@@ -129,6 +130,7 @@ boardgame-site/
 │   ├── style.css
 │   └── faq.css
 └── .env
+```
 
 ### Oversikt over tabeller
 
@@ -234,10 +236,10 @@ Så last ned pakkene i ved hjelp av requirements-filen:
 pip install -r requirements.txt
 ```
 
-For å få kobling til database, må du overføre dotenv-filen manuelt, siden den ikke ligger på Github:
+For å få kobling til database, må du overføre dotenv-filen manuelt, siden den ikke ligger på Github (her er jeg i samme mappe som .env):
 
 ```
-scp sivert@
+sudo scp .env [user]@[host]:[sti_til_destinasjon]
 ```
 
 Nå kan du kjøre prosjektet lokalt med Flask fra terminalen:

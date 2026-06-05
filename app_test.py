@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import bcrypt
 import os
 from waitress import serve
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # Kobling til pi-db og laptop-db (laptop brukes når pi ikke er tilgjengelig)
 from python.conn import db_connect
@@ -15,6 +17,13 @@ rpi_db = True
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
+# Se "Flask-Limiter" kilder.
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
 
 def create_db_structure():
     # ltdb/db
@@ -77,9 +86,9 @@ def create_db_structure():
 # Prøver å lage tabeller
 try:
     create_db_structure()
-    print("Suksess!: Databasestruktur ble laget (eller eksisterer allerede).")
+    print("Databasestruktur ble laget!")
 except Exception as e:
-    print(f"Error!: Databasestruktur ble ikke laget. {e}")
+    print(f"Error: Databasestruktur ble ikke laget. {e}")
 
 # Hjemside
 @app.route("/")
@@ -124,6 +133,7 @@ def register():
 # Bcrypt istedenfor Werkzeug.
 # Bcrypt er teoretisk sett litt sterkere, men i praksis gjorde jeg det for å prøve ut en annen løsning.
 @app.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
 def login():
     if request.method == "POST":
         username = request.form['username']
@@ -327,12 +337,24 @@ def faq():
             userid = row[0]
 
             # Setter inn spørsmål i databasen (spørsmål og brukers id)
-            cursor.execute("INSERT INTO question (question, user_id) VALUES (%s, %s)", (question, userid,))
+            cursor.execute("INSERT INTO question (question, user_id) VALUES (%s, %s)", (question, userid))
             conn.commit()
             flash("Question successfully submitted! We will try to answer it as soon as possible.")
     return render_template('faq.html')
 
-
+@app.route('/favorites/<int:boardgame_id>', methods=["GET", "POST"])
+def favorites(boardgame_id):
+    if request.method == "POST":
+        conn = db_connect() if rpi_db else ltdb_connect()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT FROM favorited_boardgame boardgame_id WHERE user_id=%s", (boardgame_id,))
+        row = cursor.fetchone()
+        
+        if row:
+            cursor.execute("DELETE FROM favorited_boardgame WHERE favorite_boardgame boardgame_id WHERE user_id=%s", (boardgame_id,))
+        else:
+            cursor.execute("INSERT INTO favorited_boardgame (user_id, boardgame_id) VALUES (%s, %s)", (session['username'], boardgame_id))
 
 if __name__ == "__main__":
     #app.run(debug=True)

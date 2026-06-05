@@ -44,5 +44,5 @@ Her oppgir jeg kilder brukt under prøveeksamen, på en måte slik at andre kan 
 
 Her oppgir jeg kilder brukt under eksamen, på en måte slik at andre kan finne fram til dem. Noen steder i koden finner du kommentarer om at det er brukt kilder, disse finnes som regel i mer detalj i dette dokumentet.
 
-
+- _Flask-Limiter_: [https://flask-limiter.readthedocs.io/en/stable/](https://flask-limiter.readthedocs.io/en/stable/)
 
