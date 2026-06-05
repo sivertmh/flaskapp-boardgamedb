@@ -348,9 +348,19 @@ def faq():
 def terms():
     return render_template('terms.html')
 
-@app.route('/favorite/<int:boardgame_id>')
+@app.route('/favorite/<int:boardgame_id>', methods=["GET", "POST"])
 def favorite(boardgame_id):
-    return None
+    if request.method == "POST":
+        conn = db_connect() if rpi_db else ltdb_connect()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM favorited_boardgame WHERE user_id=%s AND boardgame_id=%s", (session['user_id'], boardgame_id))
+        favorited_boardgame_exists = cursor.fetchone()
+        
+        if favorited_boardgame_exists:
+            cursor.execute("DELTE FROM favorited_boardgame WHERE user_id=%s AND boardgame_id=%s", (session['user_id'], boardgame_id))
+        else:
+            cursor.execute("INSERT INTO favorited_boardgame (user_id, boardgame_id) VALUES (%s, %s)", (session['user_id'], boardgame_id))
         
 if __name__ == "__main__":
     #app.run(debug=True)
