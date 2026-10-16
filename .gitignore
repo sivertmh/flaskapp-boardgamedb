@@ -4,8 +4,7 @@
 # Python-relatert
 __pycache__/
 
-# Ulike environment-er
-.env
+# Andre environment-er
 .envrc
 .venv
 env/

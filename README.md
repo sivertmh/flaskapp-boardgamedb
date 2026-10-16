@@ -34,9 +34,7 @@ Hvem er løsningen laget for?
 
 Løsningen er laget for de som spiller og liker brettspill, og de som vil finne ut mer om de. Det kan f.eks. være før de velger å kjøpe det, eller ikke, p.g.a. det de leste om det. Det kan også f.eks. være de som har mistet regler og glemte hva målet i spillet var som bruker siden for å minne seg selv på dette.
 
-### Plan for Eksamendagen -- ITK2004 5. juni 2026
-
-Videre kan du lese om det jeg har planlagt å utføre på eksamensdagen, den tverrfaglige og praktiske eksamenen i IT-faget. Man vil også finne dette i kortere form på Kanbanboardet koblet til dette prosjektet. 
+### Forbedringer
 
 #### Lage et ordentlig brukerdashbord
 
@@ -71,17 +69,6 @@ Dette er en av de mer avanserte tingene jeg kan utføre som vil vise mye kompeta
 ##### Oversiktlige søkeresultater
 
 Nå hentes bare alt ut av databasen og vises i en parantes, en rå python-liste. Dette er ikke optimalt. For å gjøre det enklest mulig kan jeg ta utgangspunkt i "brettspillkortene" jeg har fra før av. Jeg ser på dette som litt en backup-ting å holde på med, et ekstra gjøremål for sikkerhets skyld.
-
-#### Disponering av Tid
-
-Først må jeg jo sette opp raspberry pi-en og sikre at koblingen fungerer, så at nettsiden kjører.
-
-Når sensor kommer innom for første gang, må jeg vise frem og forklare ideen bak prosjektet. Jeg kan vise frem en logget inn admin-bruker for å navigere og vise alle sidene. Så vil jeg fortsette ved å si planen min og at jeg skal prøve å lage et favoritt-knapp-system og lage tabellen i databasen foran sensor for å vise kompetanse.
-
-Tredje runde kan jeg vise mer utvikling ved å vise koden jeg har utviklet for favorittfunksjonen til nå, og forhåpentligvis kode litt foran sensor.
-
-Den siste runden kan jeg bruke på TOS og forklare til sensoren om ulike lover og regler innenfor personvern og hvordan jeg tenker på sikkerhet i løsningen min. Hvis jeg skulle få ekstra tid har jeg noen backup-oppgaver å holde på med, som ryddig søkeresultat.
-
 
 ---
 
@@ -224,14 +211,22 @@ CREATE TABLE favorited_boardgame (
 
 ### Hvordan sette opp dette systemet
 
-1. Før du starter må du ha installert disse på systemet (dependencies):
+1. Før du starter må du ha installert disse på systemet (dependencies). Kjør kommandoene om du ikke har disse pakkene installert:
 
 - git
 - python
 
+Linux:
 ```bash
-# Kjør om du ikke har disse pakkene installert
 sudo apt install git python
+```
+
+Windows:
+```pwsh
+# Denne kommandoen viser deg alle python-pakkene
+winget search Python.Python
+# Finn den nyeste pakken med og installer den slik. Denne kommandoen installerer både Python (3.14) og Git:
+winget install -e --id Python.Python.3.14 Git.Git
 ```
 
 2. Deretter kan du starte ved å klone prosjektet:

@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import bcrypt
 import os
 from waitress import serve
+from boardgamegeek import BGGClient
 
 # Kobling til pi-db og laptop-db (laptop brukes når pi ikke er tilgjengelig)
 from python.conn import db_connect
@@ -11,10 +12,11 @@ from python.laptop_conn import ltdb_connect
 load_dotenv()
 
 # Bestemmer om rpi- eller laptop-db-kobling skal brukes
-rpi_db = True
+rpi_db = False
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
+bgg = BGGClient("access_token")
 
 def create_db_structure():
     # ltdb/db
