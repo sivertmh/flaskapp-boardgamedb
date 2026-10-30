@@ -1,26 +1,28 @@
-from flask import Flask, redirect, render_template, request, url_for, flash, session
+from flask import Flask, redirect, render_template, url_for, flash, request, session
 from dotenv import load_dotenv
 import bcrypt
 import os
 from waitress import serve
-from boardgamegeek import BGGClient
-
+# Fungerer ikke enda. Søknad må godkjennes først.
+#from boardgamegeek import BGGClient
 # Kobling til pi-db og laptop-db (laptop brukes når pi ikke er tilgjengelig)
 from python.conn import db_connect
 from python.laptop_conn import ltdb_connect
 
 load_dotenv()
 
-# Bestemmer om rpi- eller laptop-db-kobling skal brukes
-rpi_db = False
+# Bestemmer om ekstern- eller laptop-db skal brukes
+ext_db = False
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
-bgg = BGGClient("access_token")
+# Fungerer ikke enda. Søknad må godkjennes først.
+#bgg = BGGClient("access_token")
 
 def create_db_structure():
+    """Funksjon som oppretter tabellene i Db-strukturen om de ikke er laget fra før av."""
     # ltdb/db
-    conn = db_connect() if rpi_db else ltdb_connect()
+    conn = db_connect() if ext_db else ltdb_connect()
     cursor = conn.cursor()
     
     # Rolletabell
@@ -73,7 +75,7 @@ def create_db_structure():
         )
     """)
     
-    # Favorited Boardgame
+    # Favorittbrettspill
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS favorited_boardgame (
             id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, 
@@ -97,32 +99,46 @@ except Exception as e:
 # Hjemside
 @app.route("/")
 def index():
-    
-    conn = db_connect() if rpi_db else ltdb_connect()
+    conn = db_connect() if ext_db else ltdb_connect()
     cursor = conn.cursor()
 
-    # Henter brettspillinfo som en liste/tuple.
+    # Henter brettspillinfo som en tuppel.
     cursor.execute("SELECT name, year_published, publisher, img_filename, id FROM boardgame")
     bg_info = cursor.fetchall()
-    
-    return render_template("index.html", bg_info=bg_info)
 
-# Registrering
+    # Lager tomt sett for variabelen i tilfelle bruker ikke er logget inn
+    favorited_ids = set()
+
+    # Henter favorittbrettspill om logget inn
+    if session['user_id']:
+        cursor.execute("SELECT boardgame_id FROM favorited_boardgame WHERE user_id=%s", (session['user_id'],))
+        # Linjen under er laget med hjelp av KI
+        favorited_ids = {row[0] for row in cursor.fetchall()}
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template("index.html", bg_info=bg_info, favorited_ids=favorited_ids)
+
+# Registrering (bruker Bcrypt)
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
             # Enten kobling til db på laptop eller rpi
-            conn = db_connect() if rpi_db else ltdb_connect()
+            conn = db_connect() if ext_db else ltdb_connect()
             cursor = conn.cursor()
+
             username = request.form['username']
             email = request.form['email']
+
             # Kode fra geeksforgeeks.org for hashing med bcrypt
             password = (request.form['password'])
             password_bytes = password.encode('utf-8')
             salt = bcrypt.gensalt()
             password_hash_bytes = bcrypt.hashpw(password_bytes, salt)
-            # Siden jeg bruker CHAR(60) i DB må jeg gjøre om til tekststreng
+            # Siden jeg bruker CHAR(60) i Db må jeg gjøre om til tekststreng
             password_hash_str = password_hash_bytes.decode()
+
             # Setter info inn i databasen (3 er rolle-id for vanlig bruker)
             cursor.execute("INSERT INTO user (username, email, password, role_id) VALUES (%s, %s, %s, %s)", (username, email, password_hash_str, 3))
             conn.commit()
@@ -133,17 +149,15 @@ def register():
             return redirect(url_for("login"))
     return render_template("register.html")
 
-# Innlogging
-# Bcrypt istedenfor Werkzeug.
-# Bcrypt er teoretisk sett litt sterkere, men i praksis gjorde jeg det for å prøve ut en annen løsning.
+# Innlogging (bruker Bcrypt)
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
+        conn = db_connect() if ext_db else ltdb_connect()
+        cursor = conn.cursor(dictionary=True)
+
         username = request.form['username']
         password = request.form['password'].encode('utf-8')
-        
-        conn = db_connect() if rpi_db else ltdb_connect()
-        cursor = conn.cursor(dictionary=True)
         
         # Henter brukernavn fra db ved hjelp av form-data
         cursor.execute("SELECT * FROM user WHERE username=%s", (username,))
@@ -159,7 +173,7 @@ def login():
         if db_password:
             # Sjekker passordene mot hverandre
             if bcrypt.checkpw(password, db_password) and user['active'] == 1:
-                conn = db_connect() if rpi_db else ltdb_connect()
+                conn = db_connect() if ext_db else ltdb_connect()
                 cursor = conn.cursor(dictionary=True)
                 
                 # Henter rollenavn basert på rolle-id
@@ -207,7 +221,7 @@ def register_boardgame():
         flash("You are not authorized to view this page.", "error")
         return redirect(url_for("index"))
     
-    conn = db_connect() if rpi_db else ltdb_connect()
+    conn = db_connect() if ext_db else ltdb_connect()
     cursor = conn.cursor()
     
     # Kjøres ved POST-ing av brettspill-form.
@@ -246,7 +260,7 @@ def register_boardgame():
 # Funksjon som brukes i search-routen.
 # Creds til Ochoaprojects. Se kilder. Modifisert.
 def perform_search(query):
-    conn = db_connect() if rpi_db else ltdb_connect()
+    conn = db_connect() if ext_db else ltdb_connect()
     cursor = conn.cursor()
 
     # Kjører søk i database med query fra bruker.
@@ -264,13 +278,13 @@ def search():
     user_query = request.form['query']
     query = '%' + request.form['query'] + '%'
     results = perform_search(query)
-    return render_template('results.html', user_query=user_query, results=results)
+    return render_template("results.html", user_query=user_query, results=results)
 
 # Route for dashbord
 @app.route('/dashboard', methods=["GET", "POST"])
 def dashboard():
-    # DB-kobling
-    conn = db_connect() if rpi_db else ltdb_connect()
+    # ltdb/db
+    conn = db_connect() if ext_db else ltdb_connect()
     cursor = conn.cursor()
     
     # Henter spørsmål fra DB
@@ -282,7 +296,7 @@ def dashboard():
     
     if request.method == "POST":
         # DB-kobling
-        conn = db_connect() if rpi_db else ltdb_connect()
+        conn = db_connect() if ext_db else ltdb_connect()
         cursor = conn.cursor()
         
         username = session["username"]
@@ -305,7 +319,7 @@ def dashboard():
         # Sletting av bruker
         # Betingelsen sjekker brukernavnene mot hverandre og passordene mot hverandre 
         if session['username'] == form_username and bcrypt.checkpw(form_password, user_password):
-            conn = db_connect() if rpi_db else ltdb_connect()
+            conn = db_connect() if ext_db else ltdb_connect()
             cursor = conn.cursor()
 
             cursor.execute("""
@@ -319,7 +333,7 @@ def dashboard():
             return redirect(url_for('index'))
         else:
             flash("Wrong username or password.", "error")
-    return render_template('dashboard.html', question_info=question_info, user_info=user_info)
+    return render_template("dashboard.html", question_info=question_info, user_info=user_info)
 
 @app.route('/faq', methods=["GET", "POST"])
 def faq():
@@ -327,7 +341,7 @@ def faq():
         email = request.form["email"]
         question = request.form["question"]
 
-        conn = db_connect() if rpi_db else ltdb_connect()
+        conn = db_connect() if ext_db else ltdb_connect()
         cursor = conn.cursor()
 
         # Henter brukers id
@@ -348,22 +362,27 @@ def faq():
 
 @app.route('/terms')
 def terms():
-    return render_template('terms.html')
+    return render_template("terms.html")
 
 @app.route('/favorite/<int:boardgame_id>', methods=["GET", "POST"])
 def favorite(boardgame_id):
     if request.method == "POST":
-        conn = db_connect() if rpi_db else ltdb_connect()
+        conn = db_connect() if ext_db else ltdb_connect()
         cursor = conn.cursor()
         
         cursor.execute("SELECT * FROM favorited_boardgame WHERE user_id=%s AND boardgame_id=%s", (session['user_id'], boardgame_id))
         favorited_boardgame_exists = cursor.fetchone()
         
         if favorited_boardgame_exists:
-            cursor.execute("DELTE FROM favorited_boardgame WHERE user_id=%s AND boardgame_id=%s", (session['user_id'], boardgame_id))
+            cursor.execute("DELETE FROM favorited_boardgame WHERE user_id=%s AND boardgame_id=%s", (session['user_id'], boardgame_id))
         else:
             cursor.execute("INSERT INTO favorited_boardgame (user_id, boardgame_id) VALUES (%s, %s)", (session['user_id'], boardgame_id))
         
+        conn.commit()
+        cursor.close()
+        conn.close()
+    return redirect(url_for('index'))
+
 if __name__ == "__main__":
     #app.run(debug=True)
     serve(app, host="0.0.0.0", port=8080)

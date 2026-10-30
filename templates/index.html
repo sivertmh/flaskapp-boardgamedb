@@ -17,13 +17,17 @@
             <!-- i[0] = navn, i[1] = år, i[3] = bilde, i[4] = id -->
             <div class="boardgame-card-cont">
                 <img src="{{ i[3] }}" alt="Box cover image for {{ i[0] }}">
-                <!-- Brettspillnavn og år -->
+                <!-- Brettspillnavn og utgivelsesår -->
                 <p>{{ i[0] }} ({{ i[1] }})</p>
                 {% if session['username'] %}
-                    <button>&#9829; test</button>
-                    <!-- Brettspill-ID -->
                     <form action="/favorite/{{ i[4] }}" method="POST">
+                    {% if i[4] in favorited_ids %}
+                    <!-- Favorittbrettspill-knapp "avlsått" -->
+                        <button type="submit">&#9829;</button>
+                    {% else %}
+                    <!-- Favorittbrettspill-knapp "påslått" -->
                         <button type="submit">&#9825;</button>
+                    {% endif %}
                     </form>
                 {% endif %}
             </div>
