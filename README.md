@@ -231,7 +231,8 @@ Jeg vil bruke Boardgamegeeks API, men søknaden min om tilgang har ikke gått ig
 BGG-API er en python API wrapper for Boardgamegeeks XML API 2. Jeg er ikke kjent med å bruke APIer generelt, og definitivt ikke via XML. Derfor velger jeg å bruke dette verktøyet som ikke bare gjør det enklere å hente ut brettspillinformasjon, men som også gjør at jeg kan bruke objekter i python, et konsept og kodespråk jeg er bedre kjent med.
 Dette er dokumentasjonen til BGG-API: https://bgg-api.readthedocs.io/en/latest/
 
-
+![Min ventende søknad for BGG XML API 2](dokumentasjon/bilder/bgg_api_application_pending.png)
+*Bilde: Jeg venter på at søknaden min for BGG XML API 2 skal bli godkjent*
 
 ---
 
