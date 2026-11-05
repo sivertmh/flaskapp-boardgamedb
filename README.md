@@ -18,29 +18,29 @@ Sivert M. Hansen (Individuelt prosjekt)
 
 - Hva er prosjektet?
 
-Prosjektet en Flask-applikasjon som jeg utvikler for å lære meg python-rammeverket og å utvikle en nettside med login og andre lignende funksjoner. Det sttartet som en skoleoppgave og vi har krav om blant annet å et inloggings-system på plass. Ellers vil jeg utforske funksjoner som søking, visning av database-innhold, administrering av brukere og brukerdashbord.
+Prosjektet en Flask-applikasjon som jeg utvikler for å lære meg python-rammeverket og å utvikle en nettside med login og andre lignende funksjoner. Det startet som en skoleoppgave og vi har krav om blant annet å et innloggings-system på plass. Ellers vil jeg utforske funksjoner som søking, visning av database-innhold, administrering av brukere og brukerdashbord.
 
 - Hvilket problem løser det?
 
-Nettsiden skal la deg som sagt søke opp brettspill og finne info om de. Dette kan man bruke som et verktøy for å researche spillet eller si noe om hvilke målgruppper spillet passer. Da slipper du å komme til spillekvelden med et spill ingen liker!
+Nettsiden skal la deg søke opp brettspill og finne info om dem. Dette kan man bruke som et verktøy for å researche spillet eller si noe om hvilke målgruppper spillet passer. Da slipper du å komme til spillekvelden med et spill ingen liker!
 
 - Hvorfor er løsningen nyttig?
 
-Nettsiden funker som et oppslagsverk for brettspill. Det betyr at du kan søke opp spill du allerede har for kanskje å hvordan det spilles om du f.eks. mistet reglene. Dersom du ikke har et spill kan du bruke nettsiden til å lese deg opp på nett isteden for å måtte dra til byen eller kjøpesenteret.
+Nettsiden funker som et oppslagsverk for brettspill. Det betyr at du kan søke opp spill du allerede har for kanskje å hvordan det spilles om du f.eks. mistet reglene. Dersom du ikke har et spill kan du bruke nettsiden til å lese deg opp på nett isteden for å måtte dra til byen eller kjøpesenteret. Det finnes allerede en nettside som løser dette problemet, nemling Boardgamegeek. Dette er jeg ikke bekymret for, fordi dette er et læringsprosjekt, og det er bare godt med inspirasjon på hvordan en profesjonell slik nettside ser ut.
 
 ### Målgruppe
 
 Hvem er løsningen laget for?
 
-Løsningen er laget for de som spiller og liker brettspill, og de som vil finne ut mer om de. Det kan f.eks. være før de velger å kjøpe det, eller ikke, p.g.a. det de leste om det. Det kan også f.eks. være de som har mistet regler og glemte hva målet i spillet var som bruker siden for å minne seg selv på dette.
+Løsningen er laget for de som spiller og liker brettspill, og de som vil finne ut mer om de. Det kan f.eks. være før personen velger å kjøpe det, så de kan vurdere om det er et spill for dem. Med profil kan man også bruke siden til å markere dine favorittbrettspill og få en oversikt av disse på din side.
 
-### Forbedringer
+### Forbedringer Jeg Vil Innføre
 
-#### Lage et ordentlig brukerdashbord
+#### Et ordentlig brukerdashbord
 
 Denne er veldig omfattende så jeg deler den opp i mindre deler:
 
-##### Endre egen brukerinfo
+##### Endring av egen brukerinfo
 
 Hvis brukeren finner ut at de plutselig vil bruke en annen email, et annet brukernavn eller bytte passord, burde de kunne det. I brukerdashbordet vil jeg derfor legge til denne funksjonaliteten. Dette er relativt enkel ting som kan vise litt kompetanse innenfor Flask og SQL.
 
@@ -52,27 +52,13 @@ Til nå er den eneste forskjellen på en vanlig bruker og admin/editor mulighete
 
 Egen side til hvert av brettspillene. Her skal blant annet beskrivelsen komme til bruk, noe den ikke egentlig har vært fra før.
 
-##### Lage en side for personvernserklæring/TOS
-
-Sier seg litt selv, bare en som forteller deg hvordan jeg bruker dataen din på nettsiden. Jeg kan da lage en footer med lenke til TOS-en. Dette er en mulighet på eksamen for å vise noe innenfor etikk, lovverk og yrkesutøvelse og dekker loven for retten til informasjon. Dette vil bli en kort side med noe tekst som er mest for å ha noe fysisk å gripe tak i når jeg forklarer ulike personvernslover for sensor og eksaminator.
-
-##### Favorittbrettspill
-
-Jeg vil utvikle en funksjon som lar en bruker trykke en "favoritt-knapp" på brettspillene-infokortene som legger brettspillet til i dine favoritter. Disse favorittene kan da vises på din egen brukerside.
-
-Hvis vi skal se på det mer detaljert vil jeg legge til en ny "hjerte-knapp" på hver av brettspillene på forsiden som kan trykkes på for å legge til i databasen i en koblingstabell mellom brettspill og brukere. Trykker du på knappen igjen, skal den fjernes fra tabellen. Når det gjelder koblingstabellen, kan jeg lage den på eksamen for å vise kunnskap til eksaminator og sensor innenfor SQL. Her kan jeg i samme slengen vise frem diagrammet for å forklare hvorfor tabellen vil fungere. Det er fullt mulig og kanskje smartest om jeg lager denne hjerteknappen sin stil i forberedelsen, slik at jeg ikke må bruke tid på CSS på eksamen.
-
-For å utføre dette i Python Flask kan jeg lage en route som har parameter som kan hentes fra knapp i templaten der brettspillene vises. Så bruke en sql-setning for å se om data finnes for å så legge den til hvis den ikke finnes fra før.
-
-Dette er en av de mer avanserte tingene jeg kan utføre som vil vise mye kompetanse om jeg klarer å utføre det.
-
 ##### Oversiktlige søkeresultater
 
 Nå hentes bare alt ut av databasen og vises i en parantes, en rå python-liste. Dette er ikke optimalt. For å gjøre det enklest mulig kan jeg ta utgangspunkt i "brettspillkortene" jeg har fra før av. Jeg ser på dette som litt en backup-ting å holde på med, et ekstra gjøremål for sikkerhets skyld.
 
 ---
 
-## 3. Teknologivalg
+## 2. Teknologivalg
 
 ### Programmeringsspråk
 
@@ -88,13 +74,16 @@ Nå hentes bare alt ut av databasen og vises i en parantes, en rå python-liste.
 
 ### Andre Verktøy
 
+- Bcrypt (kryptering)
+- Boardgamegeeks XML API (søknad venter)
+- BGG-API (Python wrapper for XML-APIen)
 - Waitress (WSGI)
 - GitHub
 - GitHub Projects (Kanban)
 
 ---
 
-## 4. Datamodell
+## 3. Datamodell
 
 ### Programstruktur
 
@@ -209,7 +198,44 @@ CREATE TABLE favorited_boardgame (
 
 ```
 
-### Hvordan sette opp dette systemet
+---
+
+## 4. Forklaring av Kode
+
+### Favoritt-brettspill
+
+Denne funksjonaliteten består kode i "app.py" og i template "base.html". 
+I Python-filen er det to steder med kode for dette. Den første finner du i en egen Flask-route basert rundt parameter brettspill-ID. 
+Den andre finnes i index. Der hentes favorite_ids (ID for brukers favorittbrettspill) og sendes videre til template for index. Dette settet med IDer brukes til å sjekke om brettspillet skal ha en fylt eller tom hjerteknapp. En fylt knapp viser at den i favorittene dine, mens en tom en viser det omvendte.
+
+```python
+# Fra index.html (delen med favorittknapp)
+                {% if session['username'] %}
+                    <form action="/favorite/{{ i[4] }}" method="POST">
+                    {% if i[4] in favorited_ids %}
+                    <!-- Favorittbrettspill-knapp "avlsått" -->
+                        <button type="submit">&#9829;</button>
+                    {% else %}
+                    <!-- Favorittbrettspill-knapp "påslått" -->
+                        <button type="submit">&#9825;</button>
+                    {% endif %}
+                    </form>
+                {% endif %}
+```
+
+Her er altså "i[4]" brettspillets ID. Vi ser også at knappen bare vises om man er innlogget.
+
+### Boardgamegeek API
+
+Jeg vil bruke Boardgamegeeks API, men søknaden min om tilgang har ikke gått igjennom enda. Denne APIen sammen med BGG-API hadde gjort at jeg kunne hatt mange flere brettspill uten stor jobb.
+BGG-API er en python API wrapper for Boardgamegeeks XML API 2. Jeg er ikke kjent med å bruke APIer generelt, og definitivt ikke via XML. Derfor velger jeg å bruke dette verktøyet som ikke bare gjør det enklere å hente ut brettspillinformasjon, men som også gjør at jeg kan bruke objekter i python, et konsept og kodespråk jeg er bedre kjent med.
+Dette er dokumentasjonen til BGG-API: https://bgg-api.readthedocs.io/en/latest/
+
+
+
+---
+
+## 5. Hvordan sette opp dette systemet
 
 1. Før du starter må du ha installert disse på systemet (dependencies). Kjør kommandoene om du ikke har disse pakkene installert:
 
@@ -218,7 +244,7 @@ CREATE TABLE favorited_boardgame (
 
 Linux:
 ```bash
-sudo apt install git python
+sudo apt install python git
 ```
 
 Windows:
@@ -235,7 +261,7 @@ winget install -e --id Python.Python.3.14 Git.Git
 git clone https://github.com/sivertmh/flaskapp-boardgamedb
 ```
 
-Så må du installere nødvendige pakker for appen (Det er lurt å gjøre dette i et **venv** i python).
+Så må du installere nødvendige pakker for appen (Det er lurt å gjøre dette i et **venv** i Python).
 
 3. Hvis du vil opprette et venv:
 
@@ -268,7 +294,7 @@ sudo scp .env sivert@sspi3.local:/srv/myapp
 python -m flask run
 ```
 
-7. Du kan også kjøre med Waitress (kan da nås av andre på LAN) for et mer ordentlig deployment:
+7. Du kan også kjøre med Waitress for et mer ordentlig deployment. Da kan den nås av andre på ditt LAN:
 
 ```bash
 # 0.0.0.0 gjør den tilgjengelig utover LAN-et med ip-adressen til systemet den kjøres på (kjøres da på port 8080)
@@ -278,9 +304,9 @@ waitress-serve --host 0.0.0.0 app:app
 waitress-serve --listen 0.0.0.0:8080 app:app
 ```
 
-Utenom server/database, er dette alt du trenger for grunnleggende bruk/test av Flask-appen. Uten kobling til database vises ikke brettspill og login vil ikke fungere. Hvis du endrer databasekoblingen til en database du har tilgang til (en ny tom database), vil du kunne kjøre _app.py_ og tabeller vil opprettes.
+Utenom server/database, er dette alt du trenger for grunnleggende bruk/test av Flask-appen. Uten kobling til database vises ikke brettspill og login vil ikke fungere. Endre databasekoblingen til en database du har tilgang til (en ny tom database), så vil du kunne kjøre _app.py_ og tabeller vil opprettes.
 
-8. Hvis du får tilgang til database-filen kan du kjøre denne kommandoen for å importere databasen inn i Mariadb (Windows):
+8. Med tilgang på database-filen kan du kjøre denne kommandoen for å importere databasen til Mariadb (Windows):
 
 ```pwsh
 Get-Content "[databasefil]" | mariadb -u [brukernavn] -p [database]
@@ -292,10 +318,10 @@ Tilsvarende på Linux vil være mye enklere:
 mariadb -u [brukernavn] -p [database] < [databasefil]
 ```
 
-Om denne metoden svikter, er det også mulig å logge inn i databasen lime inn og kjøre koden fra sql-filen.
+Om denne metoden svikter, er det også mulig å logge inn i databasen, lime inn koden fra SQL-filen, så kjøre den.
 
 ---
 
 **Kilder:**
 
-Du finner kilder i dokumentet [_klideliste.md_](./dokumentasjon/kildeliste.md) som er i mappen _dokumentasjon_.
+Du finner kilder i dokumentet [_klideliste.md_](./dokumentasjon/kildeliste.md) som er i mappen _dokumentasjon_. Det står vanligvis kommentert i koden der jeg har brukt en kilde.

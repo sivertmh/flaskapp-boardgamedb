@@ -11,7 +11,7 @@ from python.laptop_conn import ltdb_connect
 
 load_dotenv()
 
-# Bestemmer om ekstern- eller laptop-db skal brukes
+# Bestemmer om ekstern eller lokal Db skal brukes
 ext_db = False
 
 app = Flask(__name__)
