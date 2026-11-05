@@ -3,9 +3,11 @@ from dotenv import load_dotenv
 import bcrypt
 import os
 from waitress import serve
-# Fungerer ikke enda. Søknad må godkjennes først.
-#from boardgamegeek import BGGClient
-# Kobling til pi-db og laptop-db (laptop brukes når pi ikke er tilgjengelig)
+
+# BGG XML API 2-søknad må godkjennes før denne koden gir reell funksjonalitet.
+from boardgamegeek import BGGClient
+
+# Kobling til pi-db og laptop-db (laptop brukes når pi ikke er tilgjengelig).
 from python.conn import db_connect
 from python.laptop_conn import ltdb_connect
 
@@ -16,8 +18,19 @@ ext_db = False
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
-# Fungerer ikke enda. Søknad må godkjennes først.
-#bgg = BGGClient("access_token")
+
+# BGG XML API 2-søknad må godkjennes før denne koden gir reell funksjonalitet.
+# Om jeg får access token så setter jeg den inn i ".env".
+bgg = BGGClient(os.environ.get("BGG_ACCESS_TOKEN"))
+
+# Jeg lager ulike spillobjekter med BGG-API
+sky_team = bgg.game("Sky Team")
+sea_salt_and_paper = bgg.game("Sea Salt & Paper")
+the_crew_the_quest_for_planet_nine = bgg.game("The Crew: The Quest for Planet Nine")
+
+# En liste med brettspill jeg har hentet med BGG-API
+bgg_boardgames = [sky_team, sea_salt_and_paper, the_crew_the_quest_for_planet_nine]
+
 
 def create_db_structure():
     """Funksjon som oppretter tabellene i Db-strukturen om de ikke er laget fra før av."""
@@ -118,7 +131,7 @@ def index():
     cursor.close()
     conn.close()
     
-    return render_template("index.html", bg_info=bg_info, favorited_ids=favorited_ids)
+    return render_template("index.html", bg_info=bg_info, favorited_ids=favorited_ids, bgg_boardgames=bgg_boardgames)
 
 # Registrering (bruker Bcrypt)
 @app.route("/register", methods=["GET", "POST"])

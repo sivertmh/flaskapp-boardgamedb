@@ -229,6 +229,13 @@ Her er altså "i[4]" brettspillets ID. Vi ser også at knappen bare vises om man
 
 Jeg vil bruke Boardgamegeeks API, men søknaden min om tilgang har ikke gått igjennom enda. Denne APIen sammen med BGG-API hadde gjort at jeg kunne hatt mange flere brettspill uten stor jobb.
 BGG-API er en python API wrapper for Boardgamegeeks XML API 2. Jeg er ikke kjent med å bruke APIer generelt, og definitivt ikke via XML. Derfor velger jeg å bruke dette verktøyet som ikke bare gjør det enklere å hente ut brettspillinformasjon, men som også gjør at jeg kan bruke objekter i python, et konsept og kodespråk jeg er bedre kjent med.
+
+```python
+return render_template("index.html", bg_info=bg_info, favorited_ids=favorited_ids, bgg_boardgames=bgg_boardgames)
+```
+
+Denne koden viser eksporteringen av listen "bgg_boardgames" til template "index.html". Dette skjer i Flask-routen for index. Herifra kan jeg bruke listen nesten på samme måte som jeg bruker "bg_info" til å vise informasjon om brettspill i index-template.
+
 Dette er dokumentasjonen til BGG-API: https://bgg-api.readthedocs.io/en/latest/
 
 ![Min ventende søknad for BGG XML API 2](dokumentasjon/bilder/bgg_api_application_pending.png)
