@@ -40,31 +40,7 @@
 <h2 class="general-heading">Games from BGG-API</h2>
 
 <!-- Skal vise brettspill hentet med BGG-API. Har ikke access token enda. -->
- <!-- MÅ REDIGERES FOR Å PASSE BGG-API. -->
-<div class="boardgame-showcase-cont">
-    {% if bg_info %}
-        {% for i in bg_info %}
-            <!-- i[0] = navn, i[1] = år, i[3] = bilde, i[4] = id -->
-            <div class="boardgame-card-cont">
-                <img src="{{ i[3] }}" alt="Box cover image for {{ i[0] }}">
-                <!-- Brettspillnavn og utgivelsesår -->
-                <p>{{ i[0] }} ({{ i[1] }})</p>
-                {% if session['username'] %}
-                    <form action="/favorite/{{ i[4] }}" method="POST">
-                    {% if i[4] in favorited_ids %}
-                    <!-- Favorittbrettspill-knapp "avlsått" -->
-                        <button type="submit">&#9829;</button>
-                    {% else %}
-                    <!-- Favorittbrettspill-knapp "påslått" -->
-                        <button type="submit">&#9825;</button>
-                    {% endif %}
-                    </form>
-                {% endif %}
-            </div>
-        {% endfor %}
-    {% else %}
-    <p>No boardgames to show. Possibly an error gathering info from database. :/</p>
-    {% endif %}
-</div>
+ <!-- Vil være basert på den jeg har over fra før. MÅ REDIGERES FOR Å PASSE BGG-API. -->
+
 
 {% endblock %}

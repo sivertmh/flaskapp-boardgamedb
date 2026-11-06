@@ -238,6 +238,23 @@ Denne koden viser eksporteringen av listen "bgg_boardgames" til template "index.
 
 Dette er dokumentasjonen til BGG-API: https://bgg-api.readthedocs.io/en/latest/
 
+En annen måte å bruke APIen på er "uten støttehjul". Da må man ha "requests" og importere ulike andre verktøy:
+
+```python
+pip install requests
+```
+
+Access token bør være i ".env" slik at den ikke blir vist på Github. Når man bruker rå API så må man lage en variabel for aksesspunktet som sett under:
+
+```python
+import time
+import requests
+import xml.etree.ElementTree as ET
+
+BGG_BASE_URL = "https://boardgamegeek.com/xmlapi2"
+BGG_TOKEN = os.environ.get("BGG_ACCESS_TOKEN")
+```
+
 ![Min ventende søknad for BGG XML API 2](dokumentasjon/bilder/bgg_api_application_pending.png)
 *Bilde: Jeg venter på at søknaden min for BGG XML API 2 skal bli godkjent*
 

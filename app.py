@@ -23,17 +23,18 @@ app.secret_key = os.environ.get("APP_SECRET_KEY")
 # Om jeg får access token så setter jeg den inn i ".env".
 bgg = BGGClient(os.environ.get("BGG_ACCESS_TOKEN"))
 
-# Jeg lager ulike spillobjekter med BGG-API
+# Ulike spillobjekter laget med BGG-API
+dnup = bgg.game("dnup")
 sky_team = bgg.game("Sky Team")
 sea_salt_and_paper = bgg.game("Sea Salt & Paper")
 the_crew_the_quest_for_planet_nine = bgg.game("The Crew: The Quest for Planet Nine")
 
 # En liste med brettspill jeg har hentet med BGG-API
-bgg_boardgames = [sky_team, sea_salt_and_paper, the_crew_the_quest_for_planet_nine]
+bgg_boardgames = [dnup, sky_team, sea_salt_and_paper, the_crew_the_quest_for_planet_nine]
 
 
 def create_db_structure():
-    """Funksjon som oppretter tabellene i Db-strukturen om de ikke er laget fra før av."""
+    """Funksjon som oppretter tabellene i Db-struktureøn om de ikke er laget fra før av."""
     # ltdb/db
     conn = db_connect() if ext_db else ltdb_connect()
     cursor = conn.cursor()
@@ -131,7 +132,7 @@ def index():
     cursor.close()
     conn.close()
     
-    return render_template("index.html", bg_info=bg_info, favorited_ids=favorited_ids, bgg_boardgames=bgg_boardgames)
+    return render_template("index.html", bg_info=bg_info, favorited_ids=favorited_ids)
 
 # Registrering (bruker Bcrypt)
 @app.route("/register", methods=["GET", "POST"])
